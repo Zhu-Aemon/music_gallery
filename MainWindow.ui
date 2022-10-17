@@ -53,6 +53,9 @@
       <bold>false</bold>
      </font>
     </property>
+    <property name="mouseTracking">
+     <bool>true</bool>
+    </property>
     <property name="styleSheet">
      <string notr="true">QListWidget 
 {
@@ -143,6 +146,9 @@ QListWidget::item:selected
       <height>23</height>
      </rect>
     </property>
+    <property name="mouseTracking">
+     <bool>true</bool>
+    </property>
     <property name="styleSheet">
      <string notr="true">QPushButton
 {
@@ -168,6 +174,9 @@ QPushButton::hover
       <width>23</width>
       <height>23</height>
      </rect>
+    </property>
+    <property name="mouseTracking">
+     <bool>true</bool>
     </property>
     <property name="styleSheet">
      <string notr="true">QPushButton
