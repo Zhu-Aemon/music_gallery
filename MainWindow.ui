@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1920</width>
+    <height>1080</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QStackedWidget" name="stackedWidget">
+    <property name="geometry">
+     <rect>
+      <x>209</x>
+      <y>50</y>
+      <width>1701</width>
+      <height>970</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QStackedWidget
+{
+	border-radius: 9px;
+}</string>
+    </property>
+    <property name="currentIndex">
+     <number>0</number>
+    </property>
+    <widget class="QWidget" name="page"/>
+    <widget class="QWidget" name="page_2"/>
+   </widget>
+   <widget class="QListWidget" name="listWidget">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>50</y>
+      <width>180</width>
+      <height>970</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Microsoft Yahei</family>
+      <pointsize>11</pointsize>
+      <weight>50</weight>
+      <italic>false</italic>
+      <bold>false</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QListWidget 
+{
+    background-color: #ffffff;
+    border: none;
+	border-raduis: 10px;
+    font: 10.5pt &quot;Microsoft Yahei&quot;;
+	outline: 0px;
+}
+QListWidget::item 
+{
+    background-color: transparent;
+    color: #000000;
+    border: 0px;
+    padding-left: 5px;
+    height: 38px;
+}
+QListWidget::item:selected 
+{
+    color: #ffffff;
+    background-color: rgb(46, 123, 253);
+	border-radius: 9px;
+}</string>
+    </property>
+    <item>
+     <property name="text">
+      <string>全部音乐</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>喜欢的音乐</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>今日推荐</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>喜欢的MV</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>热门MV推荐</string>
+     </property>
+    </item>
+   </widget>
+   <widget class="QWidget" name="widget_2" native="true">
+    <property name="geometry">
+     <rect>
+      <x>190</x>
+      <y>50</y>
+      <width>10</width>
+      <height>970</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QWidget{
+	background-color: #ffffff;
+	border-right: 1px solid #eaeaea;
+}</string>
+    </property>
+   </widget>
+   <widget class="QWidget" name="widget_3" native="true">
+    <property name="geometry">
+     <rect>
+      <x>1</x>
+      <y>50</y>
+      <width>9</width>
+      <height>970</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QWidget{
+	background-color: #ffffff;
+}</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="settings">
+    <property name="geometry">
+     <rect>
+      <x>15</x>
+      <y>15</y>
+      <width>23</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton
+{
+	margin: 0px;
+	border: 0px;
+	background-color: #ffffff;
+}
+QPushButton::hover
+{
+ background-color: #dcdcdc;
+ border-radius: 4px;
+}</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="add">
+    <property name="geometry">
+     <rect>
+      <x>170</x>
+      <y>15</y>
+      <width>23</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton
+{
+	margin: 0px;
+	border: 0px;
+	background-color: #ffffff;
+}
+QPushButton::hover
+{
+ background-color: #dcdcdc;
+ border-radius: 4px;
+}</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+  <action name="actionAbout">
+   <property name="text">
+    <string>关于musicGallery</string>
+   </property>
+   <property name="font">
+    <font>
+     <family>新宋体</family>
+    </font>
+   </property>
+  </action>
+  <action name="actionconfig">
+   <property name="text">
+    <string>配置音乐文件夹</string>
+   </property>
+   <property name="font">
+    <font>
+     <family>新宋体</family>
+    </font>
+   </property>
+  </action>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
