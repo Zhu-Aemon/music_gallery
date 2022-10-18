@@ -17,10 +17,10 @@
    <widget class="QStackedWidget" name="stackedWidget">
     <property name="geometry">
      <rect>
-      <x>209</x>
-      <y>50</y>
-      <width>1701</width>
-      <height>970</height>
+      <x>229</x>
+      <y>-1</y>
+      <width>1681</width>
+      <height>1021</height>
      </rect>
     </property>
     <property name="styleSheet">
@@ -39,9 +39,9 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>50</y>
-      <width>180</width>
-      <height>970</height>
+      <y>0</y>
+      <width>200</width>
+      <height>1021</height>
      </rect>
     </property>
     <property name="font">
@@ -53,14 +53,21 @@
       <bold>false</bold>
      </font>
     </property>
+    <property name="cursor" stdset="0">
+     <cursorShape>ArrowCursor</cursorShape>
+    </property>
+    <property name="mouseTracking">
+     <bool>true</bool>
+    </property>
     <property name="styleSheet">
      <string notr="true">QListWidget 
 {
-    background-color: #ffffff;
+    background-color: #dbe7f4;
     border: none;
 	border-raduis: 10px;
     font: 10.5pt &quot;Microsoft Yahei&quot;;
 	outline: 0px;
+	padding-top: 100px;
 }
 QListWidget::item 
 {
@@ -106,15 +113,15 @@ QListWidget::item:selected
    <widget class="QWidget" name="widget_2" native="true">
     <property name="geometry">
      <rect>
-      <x>190</x>
-      <y>50</y>
+      <x>210</x>
+      <y>0</y>
       <width>10</width>
-      <height>970</height>
+      <height>1020</height>
      </rect>
     </property>
     <property name="styleSheet">
      <string notr="true">QWidget{
-	background-color: #ffffff;
+	background-color: #dbe7f4;
 	border-right: 1px solid #eaeaea;
 }</string>
     </property>
@@ -123,75 +130,95 @@ QListWidget::item:selected
     <property name="geometry">
      <rect>
       <x>1</x>
-      <y>50</y>
+      <y>0</y>
       <width>9</width>
-      <height>970</height>
+      <height>1020</height>
      </rect>
     </property>
     <property name="styleSheet">
      <string notr="true">QWidget{
-	background-color: #ffffff;
+	background-color: #dbe7f4;
 }</string>
     </property>
    </widget>
    <widget class="QPushButton" name="settings">
     <property name="geometry">
      <rect>
-      <x>15</x>
-      <y>15</y>
+      <x>18</x>
+      <y>20</y>
       <width>23</width>
       <height>23</height>
      </rect>
+    </property>
+    <property name="cursor">
+     <cursorShape>PointingHandCursor</cursorShape>
+    </property>
+    <property name="mouseTracking">
+     <bool>true</bool>
     </property>
     <property name="styleSheet">
      <string notr="true">QPushButton
 {
 	margin: 0px;
-	outline: none;
 	border: 0px;
-	background-color: #ffffff;
+	background-color: #dbe7f4;
+}
+</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="add">
+    <property name="geometry">
+     <rect>
+      <x>180</x>
+      <y>20</y>
+      <width>23</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="cursor">
+     <cursorShape>PointingHandCursor</cursorShape>
+    </property>
+    <property name="mouseTracking">
+     <bool>true</bool>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton
+{
+	margin: 0px;
+	border: 0px;
+	background-color: #dbe7f4;
 }</string>
     </property>
     <property name="text">
      <string/>
     </property>
    </widget>
+   <widget class="QLabel" name="label">
+    <property name="geometry">
+     <rect>
+      <x>18</x>
+      <y>47</y>
+      <width>121</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Microsoft YaHei UI Semibold</family>
+      <pointsize>24</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="text">
+     <string>Gallery</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
-  <widget class="QMenuBar" name="menubar">
-   <property name="geometry">
-    <rect>
-     <x>0</x>
-     <y>0</y>
-     <width>1920</width>
-     <height>21</height>
-    </rect>
-   </property>
-   <widget class="QMenu" name="menu">
-    <property name="font">
-     <font>
-      <family>新宋体</family>
-     </font>
-    </property>
-    <property name="title">
-     <string>设置</string>
-    </property>
-    <addaction name="actionconfig"/>
-   </widget>
-   <widget class="QMenu" name="menu_2">
-    <property name="font">
-     <font>
-      <family>新宋体</family>
-     </font>
-    </property>
-    <property name="title">
-     <string>关于</string>
-    </property>
-    <addaction name="actionAbout"/>
-   </widget>
-   <addaction name="menu"/>
-   <addaction name="menu_2"/>
-  </widget>
   <action name="actionAbout">
    <property name="text">
     <string>关于musicGallery</string>

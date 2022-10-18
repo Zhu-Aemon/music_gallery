@@ -2,12 +2,13 @@ from PySide2.QtWidgets import QApplication, QMessageBox, QFileDialog, QWidget, Q
 from PySide2.QtUiTools import QUiLoader
 from PySide2.QtGui import QPalette, QColor, QPainter, QBrush, QImage, QPixmap, QIcon
 from PySide2.QtCore import Qt, QRect, QSize
+from Setting import Setting
 
 
 class MainWindow:
 
     def __init__(self):
-        self.ui = QUiLoader().load("MainWindow.ui")
+        self.ui = QUiLoader().load("resources/MainWindow.ui")
         self.ui.setWindowTitle("Music Gallery")
         palette = self.ui.palette()
         palette.setColor(QPalette.Background, '#ffffff')
@@ -16,7 +17,9 @@ class MainWindow:
         self.set_icon(self.ui.settings, r'resources/setting_button.png')
         self.set_icon(self.ui.add, r'resources/add.png')
         self.set_list_icon(exception=None)
-        self.ui.listWidget.itemClicked.connect(self.change_icon)
+        self.ui.listWidget.itemSelectionChanged.connect(self.change_icon)
+        self.setting_window = Setting()
+        self.ui.settings.clicked.connect(self.show_setting)
 
     def set_icon(self, button, icon):
         img = QImage(icon)
@@ -61,6 +64,9 @@ class MainWindow:
         self.ui.listWidget.item(index).setIcon(fit_pixmap)
         self.ui.listWidget.setIconSize(QSize(23, 23))
         self.set_list_icon(exception=index)
+
+    def show_setting(self):
+        self.setting_window.window.show()
 
 
 app = QApplication([])
