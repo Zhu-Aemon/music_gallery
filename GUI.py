@@ -1,13 +1,14 @@
-from PySide2.QtWidgets import QApplication, QMessageBox, QFileDialog, QWidget, QPushButton, QListWidget
+from PySide2.QtWidgets import QApplication, QMainWindow, QHeaderView
 from PySide2.QtUiTools import QUiLoader
-from PySide2.QtGui import QPalette, QColor, QPainter, QBrush, QImage, QPixmap, QIcon
-from PySide2.QtCore import Qt, QRect, QSize
+from PySide2.QtGui import QPalette, QImage, QPixmap, QCloseEvent
+from PySide2.QtCore import Qt, QSize
 from Setting import Setting
 
 
-class MainWindow:
+class MainWindow(QMainWindow):
 
     def __init__(self):
+        super().__init__()
         self.ui = QUiLoader().load("resources/MainWindow.ui")
         self.ui.setWindowTitle("Music Gallery")
         palette = self.ui.palette()
@@ -20,17 +21,19 @@ class MainWindow:
         self.ui.listWidget.itemSelectionChanged.connect(self.change_icon)
         self.setting_window = Setting()
         self.ui.settings.clicked.connect(self.show_setting)
+        self.column_resize()
 
-    def set_icon(self, button, icon):
+    @staticmethod
+    def set_icon(button, icon):
         img = QImage(icon)
         pixmap = QPixmap(img)
         fit_pixmap = pixmap.scaled(23, 23, Qt.IgnoreAspectRatio,
-                                  Qt.SmoothTransformation)  # 注意 scaled() 返回一个 QtGui.QPixmap
+                                   Qt.SmoothTransformation)  # 注意 scaled() 返回一个 QtGui.QPixmap
         button.setIcon(fit_pixmap)
         button.setIconSize(QSize(23, 23))
 
     def set_list_icon(self, exception: int):
-        icon_list = ['resources/all_music.png', 'resources/favourite_music.png', 'resources/recommended.png',
+        icon_list = ['resources/all_music.png', 'resources/recent.png', 'resources/favourite_music.png', 'resources/recommended.png',
                      'resources/MV.png', 'resources/bilibili.png']
         if exception is not None:
             for i in range(self.ui.listWidget.count()):
@@ -47,14 +50,13 @@ class MainWindow:
             for i in range(self.ui.listWidget.count()):
                 img = QImage(icon_list[i])
                 pixmap = QPixmap(img)
-                fit_pixmap = pixmap.scaled(23, 23, Qt.IgnoreAspectRatio,
-                                            Qt.SmoothTransformation)  # 注意 scaled() 返回一个 QtGui.QPixmap
+                fit_pixmap = pixmap.scaled(23, 23, Qt.IgnoreAspectRatio, Qt.SmoothTransformation)
                 self.ui.listWidget.item(i).setIcon(fit_pixmap)
             self.ui.listWidget.setIconSize(QSize(23, 23))
 
     def change_icon(self):
-        icon_list = ['resources-inverted/all_music.png', 'resources-inverted/favourite_music.png',
-                     'resources-inverted/recommended.png',
+        icon_list = ['resources-inverted/all_music.png', 'resources-inverted/recent.png',
+                     'resources-inverted/favourite_music.png', 'resources-inverted/recommended.png',
                      'resources-inverted/MV.png', 'resources-inverted/bilibili.png']
         index = self.ui.listWidget.currentRow()
         img = QImage(icon_list[index])
@@ -67,6 +69,13 @@ class MainWindow:
 
     def show_setting(self):
         self.setting_window.window.show()
+
+    def column_resize(self):
+        self.ui.tableWidget.setColumnWidth(0, 400)
+        self.ui.tableWidget.setColumnWidth(1, 250)
+        self.ui.tableWidget.setColumnWidth(2, 150)
+        self.ui.tableWidget.setColumnWidth(3, 100)
+        self.ui.tableWidget.horizontalHeader().setSectionResizeMode(QHeaderView.Fixed)
 
 
 app = QApplication([])

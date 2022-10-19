@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1920</width>
-    <height>1080</height>
+    <width>1200</width>
+    <height>900</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,10 +17,10 @@
    <widget class="QStackedWidget" name="stackedWidget">
     <property name="geometry">
      <rect>
-      <x>229</x>
-      <y>-1</y>
-      <width>1681</width>
-      <height>1021</height>
+      <x>230</x>
+      <y>0</y>
+      <width>960</width>
+      <height>900</height>
      </rect>
     </property>
     <property name="styleSheet">
@@ -32,7 +32,80 @@
     <property name="currentIndex">
      <number>0</number>
     </property>
-    <widget class="QWidget" name="page"/>
+    <widget class="QWidget" name="page">
+     <widget class="QLabel" name="label_2">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>45</y>
+        <width>111</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Microsoft YaHei UI Semibold</family>
+        <pointsize>18</pointsize>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>全部音乐</string>
+      </property>
+     </widget>
+     <widget class="QTableWidget" name="tableWidget">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>90</y>
+        <width>951</width>
+        <height>781</height>
+       </rect>
+      </property>
+      <property name="minimumSize">
+       <size>
+        <width>951</width>
+        <height>0</height>
+       </size>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QTableWidget {
+	background: transparent;
+	border: none;
+}
+QHeaderView::section{
+	text-align:center;
+	padding:3px;
+	margin:0px;
+	border-left-width:0;
+}</string>
+      </property>
+      <property name="showGrid">
+       <bool>false</bool>
+      </property>
+      <column>
+       <property name="text">
+        <string>Song</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>Artist</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>Album</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>Duration</string>
+       </property>
+      </column>
+     </widget>
+    </widget>
     <widget class="QWidget" name="page_2"/>
    </widget>
    <widget class="QListWidget" name="listWidget">
@@ -87,6 +160,11 @@ QListWidget::item:selected
     <item>
      <property name="text">
       <string>全部音乐</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>最近播放</string>
      </property>
     </item>
     <item>

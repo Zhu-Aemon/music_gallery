@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>600</width>
-    <height>500</height>
+    <width>601</width>
+    <height>516</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -15,7 +15,7 @@
   </property>
   <property name="windowIcon">
    <iconset>
-    <normaloff>setting_button.png</normaloff>setting_button.png</iconset>
+    <normaloff>../../../.designer/backup/setting_button.png</normaloff>../../../.designer/backup/setting_button.png</iconset>
   </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QStackedWidget" name="stackedWidget">
@@ -24,7 +24,7 @@
       <x>170</x>
       <y>0</y>
       <width>421</width>
-      <height>471</height>
+      <height>491</height>
      </rect>
     </property>
     <property name="styleSheet">
@@ -44,7 +44,7 @@
         <x>20</x>
         <y>60</y>
         <width>391</width>
-        <height>391</height>
+        <height>370</height>
        </rect>
       </property>
       <property name="font">
@@ -168,6 +168,56 @@ QListWidget::item:selected
       </property>
       <property name="text">
        <string>设置Gallery音乐的文件路径:</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="cancel_button">
+      <property name="geometry">
+       <rect>
+        <x>300</x>
+        <y>460</y>
+        <width>51</width>
+        <height>23</height>
+       </rect>
+      </property>
+      <property name="cursor">
+       <cursorShape>PointingHandCursor</cursorShape>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QPushButton
+{
+	background-color: #d7d7d7;
+	outline: none;
+	border: 1px solid #eaeaea;
+	border-radius: 4px;
+}</string>
+      </property>
+      <property name="text">
+       <string>取消</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="save_button">
+      <property name="geometry">
+       <rect>
+        <x>360</x>
+        <y>460</y>
+        <width>51</width>
+        <height>23</height>
+       </rect>
+      </property>
+      <property name="cursor">
+       <cursorShape>PointingHandCursor</cursorShape>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QPushButton
+{
+	background-color: #d7d7d7;
+	outline: none;
+	border: 1px solid #eaeaea;
+	border-radius: 4px;
+}</string>
+      </property>
+      <property name="text">
+       <string>保存</string>
       </property>
      </widget>
     </widget>
