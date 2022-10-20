@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1200</width>
-    <height>900</height>
+    <width>1100</width>
+    <height>925</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -32,12 +32,13 @@
     <property name="currentIndex">
      <number>0</number>
     </property>
+    <widget class="QWidget" name="page_3"/>
     <widget class="QWidget" name="page">
      <widget class="QLabel" name="label_2">
       <property name="geometry">
        <rect>
-        <x>0</x>
-        <y>45</y>
+        <x>30</x>
+        <y>34</y>
         <width>111</width>
         <height>31</height>
        </rect>
@@ -45,7 +46,7 @@
       <property name="font">
        <font>
         <family>Microsoft YaHei UI Semibold</family>
-        <pointsize>18</pointsize>
+        <pointsize>20</pointsize>
         <weight>75</weight>
         <bold>true</bold>
        </font>
@@ -57,10 +58,10 @@
      <widget class="QTableWidget" name="tableWidget">
       <property name="geometry">
        <rect>
-        <x>0</x>
+        <x>30</x>
         <y>90</y>
         <width>951</width>
-        <height>781</height>
+        <height>741</height>
        </rect>
       </property>
       <property name="minimumSize">
@@ -69,21 +70,49 @@
         <height>0</height>
        </size>
       </property>
+      <property name="font">
+       <font>
+        <family>25 PingFang Regular</family>
+        <pointsize>10</pointsize>
+        <weight>50</weight>
+        <italic>false</italic>
+        <bold>false</bold>
+       </font>
+      </property>
+      <property name="cursor" stdset="0">
+       <cursorShape>ArrowCursor</cursorShape>
+      </property>
+      <property name="focusPolicy">
+       <enum>Qt::NoFocus</enum>
+      </property>
       <property name="styleSheet">
        <string notr="true">QTableWidget {
 	background: transparent;
 	border: none;
+	font: 10pt solid &quot;PingFang Regular&quot;;
+	outline: none;
 }
 QHeaderView::section{
 	text-align:center;
 	padding:3px;
 	margin:0px;
 	border-left-width:0;
+}
+QTableWidget::item:selected{
+	outline: none;
+}
+QTableWidget::item {
+	border-bottom:1px solid #eaeaea;
 }</string>
       </property>
       <property name="showGrid">
        <bool>false</bool>
       </property>
+      <column>
+       <property name="text">
+        <string>icons</string>
+       </property>
+      </column>
       <column>
        <property name="text">
         <string>Song</string>
@@ -99,14 +128,12 @@ QHeaderView::section{
         <string>Album</string>
        </property>
       </column>
-      <column>
-       <property name="text">
-        <string>Duration</string>
-       </property>
-      </column>
      </widget>
     </widget>
     <widget class="QWidget" name="page_2"/>
+    <widget class="QWidget" name="page_4"/>
+    <widget class="QWidget" name="page_5"/>
+    <widget class="QWidget" name="page_6"/>
    </widget>
    <widget class="QListWidget" name="listWidget">
     <property name="geometry">
@@ -114,7 +141,7 @@ QHeaderView::section{
       <x>10</x>
       <y>0</y>
       <width>200</width>
-      <height>1021</height>
+      <height>900</height>
      </rect>
     </property>
     <property name="font">
@@ -194,7 +221,7 @@ QListWidget::item:selected
       <x>210</x>
       <y>0</y>
       <width>10</width>
-      <height>1020</height>
+      <height>900</height>
      </rect>
     </property>
     <property name="styleSheet">
@@ -210,7 +237,7 @@ QListWidget::item:selected
       <x>1</x>
       <y>0</y>
       <width>9</width>
-      <height>1020</height>
+      <height>900</height>
      </rect>
     </property>
     <property name="styleSheet">

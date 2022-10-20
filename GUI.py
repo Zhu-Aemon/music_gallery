@@ -1,8 +1,12 @@
-from PySide2.QtWidgets import QApplication, QMainWindow, QHeaderView
+import os
+
+from PySide2.QtWidgets import QApplication, QMainWindow, QHeaderView, QTableWidgetItem, QAbstractItemView
 from PySide2.QtUiTools import QUiLoader
-from PySide2.QtGui import QPalette, QImage, QPixmap, QCloseEvent
-from PySide2.QtCore import Qt, QSize
+from PySide2.QtGui import QPalette, QImage, QPixmap, QBrush, QColor
+from PySide2.QtCore import Qt, QSize, QSettings
+
 from Setting import Setting
+from Gallery import Core
 
 
 class MainWindow(QMainWindow):
@@ -21,7 +25,10 @@ class MainWindow(QMainWindow):
         self.ui.listWidget.itemSelectionChanged.connect(self.change_icon)
         self.setting_window = Setting()
         self.ui.settings.clicked.connect(self.show_setting)
+        self.display_all_songs()
         self.column_resize()
+        self.ui.listWidget.itemSelectionChanged.connect(self.shift_stack)
+        self.ui.listWidget.itemSelectionChanged.connect(self.shift_stack)
 
     @staticmethod
     def set_icon(button, icon):
@@ -71,11 +78,49 @@ class MainWindow(QMainWindow):
         self.setting_window.window.show()
 
     def column_resize(self):
-        self.ui.tableWidget.setColumnWidth(0, 400)
+        self.ui.tableWidget.setColumnWidth(0, 50)
         self.ui.tableWidget.setColumnWidth(1, 250)
-        self.ui.tableWidget.setColumnWidth(2, 150)
-        self.ui.tableWidget.setColumnWidth(3, 100)
-        self.ui.tableWidget.horizontalHeader().setSectionResizeMode(QHeaderView.Fixed)
+        self.ui.tableWidget.setColumnWidth(2, 250)
+        self.ui.tableWidget.setColumnWidth(3, 150)
+        self.ui.tableWidget.horizontalHeader().setHidden(True)
+        self.ui.tableWidget.verticalHeader().setDefaultSectionSize(45)
+        self.ui.tableWidget.verticalHeader().setHidden(True)
+        self.ui.tableWidget.setEditTriggers(QAbstractItemView.NoEditTriggers)
+        row_number = self.ui.tableWidget.rowCount()
+        for i in range(row_number):
+            self.ui.tableWidget.item(i, 2).setForeground(QBrush(QColor('#707070')))
+            self.ui.tableWidget.item(i, 3).setForeground(QBrush(QColor('#707070')))
+
+    def display_all_songs(self):
+        source_settings = QSettings('config/source_config.ini', QSettings.IniFormat)
+        path_list = source_settings.value('source_files')
+        all_path_list = Core().source_scan(path_list)
+        all_path_settings = QSettings('config/all_path_config.ini', QSettings.IniFormat)
+        all_path_settings.setValue('all_path', all_path_list)
+        self.ui.tableWidget.setRowCount(len(all_path_list))
+        for index in range(len(all_path_list)):
+            path = all_path_list[index]
+            assert isinstance(path, str), 'path is not str!'
+            if path.endswith('mp3'):
+                title, artist, album, cover_data = Core().get_mp3_info(path)
+                self.ui.tableWidget.setItem(index, 0, QTableWidgetItem(''))
+                self.ui.tableWidget.setItem(index, 1, QTableWidgetItem(title))
+                self.ui.tableWidget.setItem(index, 2, QTableWidgetItem(artist))
+                self.ui.tableWidget.setItem(index, 3, QTableWidgetItem(album))
+                if cover_data is not None:
+                    with open('tmp.png', 'wb') as f:
+                        f.write(cover_data)
+                        f.close()
+                    img = QImage('tmp.png')
+                    pixmap = QPixmap(img)
+                    fit_pixmap = pixmap.scaled(45, 45, Qt.IgnoreAspectRatio, Qt.SmoothTransformation)
+                    self.ui.tableWidget.item(index, 0).setIcon(fit_pixmap)
+                    self.ui.tableWidget.setIconSize(QSize(38, 38))
+                    os.remove('tmp.png')
+
+    def shift_stack(self):
+        idx = self.ui.listWidget.currentRow()
+        self.ui.stackedWidget.setCurrentIndex(idx + 1)
 
 
 app = QApplication([])
