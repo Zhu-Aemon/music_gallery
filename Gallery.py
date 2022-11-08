@@ -26,14 +26,16 @@ class Core:
         mp3_title = file.tags['TIT2'].text[0]
         mp3_artist = file.tags['TPE1'].text[0]
         try:
-            mp3_cover_data = file.tags['APIC:Cover'].data
-        except KeyError:
-            try:
-                mp3_cover_data = file.tags['APIC:'].data
-            except KeyError:
-                mp3_cover_data = None
-        try:
             mp3_album = file.tags['TALB'].text[0]
         except KeyError:
             mp3_album = ''
-        return mp3_title, mp3_artist, mp3_album, mp3_cover_data
+        return mp3_title, mp3_artist, mp3_album
+
+    @staticmethod
+    def save_cover(filepath, filename):
+        file = File(filepath)
+        if '.' not in filename:
+            filename = f'{filename}.jpg'
+        with open(filename, "wb") as f:
+            f.write(file.tags['APIC:'].data)
+            f.close()

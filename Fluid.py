@@ -8,7 +8,7 @@ brush_list = []
 def setup():
     size(500, 500)
     background(255)
-    for i in range(1):
+    for i in range(50):
         brush_list.append(Brush())
 
 
@@ -31,34 +31,33 @@ class Brush:
             self.components.append(random.randint(1, 4))
 
     def paint(self):
-        a = 0
-        r = 0
-        x1 = self.x
-        y1 = self.y
-        u = random.random() * 0.5 + 0.5
+        # a = 0
+        r = 50
+        # u = random.random() * 0.5 + 0.5
+        velocity = random.random() * 0.15 + 1.5
 
         fill(self.R, self.G, self.B, 10)
-        # no_stroke()
+        no_stroke()
 
-        begin_shape()
-        while a < 2 * pi:
-            vertex(x1, y1)
-            v = random.random() * 0.15 + 0.85
-            x1 = self.x + r * cos(self.angle + a) * u * v
-            y1 = self.y + r * sin(self.angle + a) * u * v
-            a += pi / 180
-            for i in range(2):
-                r += sin(a * self.components[i])
-                print(r)
+        # begin_shape()
+        # while a < 2 * pi:
+        #     vertex(x1, y1)
+        #     v = random.random() * 0.15 + 0.85
+        #     x1 = self.x + r * cos(self.angle + a) * u * v
+        #     y1 = self.y + r * sin(self.angle + a) * u * v
+        #     a += pi / 180
+        #     for i in range(2):
+        #         r += sin(a * self.components[i])
+        #
+        # end_shape(CLOSE)
+        ellipse(self.x, self.y, r, r)
 
-        end_shape(CLOSE)
+        self.x += velocity * cos(self.angle)
+        self.y += velocity * sin(self.angle)
+        self.angle += random.random() * 2 * pi / 180
 
-        if self.x < 0 or self.x > 500 or self.y < 0 or self.y > 500:
-            self.angle += 0.5 * pi
-
-        self.x += 2 * cos(self.angle)
-        self.y += 2 * sin(self.angle)
-        self.angle += random.random() * 0.3 - 0.15
+        if self.x - r < 0 or self.x + r > 500 or self.y - r < 0 or self.y + r > 500:
+            self.angle += pi / 2
 
 
 run()
