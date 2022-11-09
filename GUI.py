@@ -1,5 +1,3 @@
-import os
-
 from PySide2.QtWidgets import QApplication, QMainWindow, QHeaderView, QTableWidgetItem, QAbstractItemView, QTableWidget
 from PySide2.QtUiTools import QUiLoader
 from PySide2.QtGui import QPalette, QImage, QPixmap, QBrush, QColor
@@ -19,8 +17,12 @@ class MainWindow(QMainWindow):
         palette.setColor(QPalette.Background, '#ffffff')
         self.ui.setPalette(palette)
         self.ui.setAutoFillBackground(True)
-        self.set_icon(self.ui.settings, r'resources/setting_button.png')
-        self.set_icon(self.ui.add, r'resources/add.png')
+        self.set_icon(self.ui.settings, r'resources/setting_button.png', size=23)
+        self.set_icon(self.ui.add, r'resources/add.png', size=23)
+        self.set_icon(self.ui.play_music, r'resources-inverted/play_icon_gray.png', size=32)
+        self.set_icon(self.ui.last_song, r'resources-inverted/last_song_gray.png', size=32)
+        self.set_icon(self.ui.next_song, r'resources-inverted/next_song_gray.png', size=32)
+        self.set_icon(self.ui.cover, r'example.jpg', size=47)
         self.set_list_icon(exception=None)
         self.ui.listWidget.itemSelectionChanged.connect(self.change_icon)
         self.setting_window = Setting()
@@ -31,13 +33,13 @@ class MainWindow(QMainWindow):
         self.ui.listWidget.itemSelectionChanged.connect(self.shift_stack)
 
     @staticmethod
-    def set_icon(button, icon):
+    def set_icon(button, icon, size):
         img = QImage(icon)
         pixmap = QPixmap(img)
-        fit_pixmap = pixmap.scaled(23, 23, Qt.IgnoreAspectRatio,
+        fit_pixmap = pixmap.scaled(size, size, Qt.IgnoreAspectRatio,
                                    Qt.SmoothTransformation)  # 注意 scaled() 返回一个 QtGui.QPixmap
         button.setIcon(fit_pixmap)
-        button.setIconSize(QSize(23, 23))
+        button.setIconSize(QSize(size, size))
 
     def set_list_icon(self, exception: int):
         icon_list = ['resources/all_music.png', 'resources/recent.png', 'resources/favourite_music.png', 'resources/recommended.png',
@@ -80,7 +82,7 @@ class MainWindow(QMainWindow):
     def column_adjust(self):
         self.ui.tableWidget.setColumnWidth(0, 600)
         self.ui.tableWidget.setColumnWidth(1, 250)
-        self.ui.tableWidget.setColumnWidth(2, 250)
+        self.ui.tableWidget.setColumnWidth(2, 300)
         self.ui.tableWidget.horizontalHeader().setHidden(True)
         self.ui.tableWidget.verticalHeader().setDefaultSectionSize(35)
         self.ui.tableWidget.verticalHeader().setHidden(True)

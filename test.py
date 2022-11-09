@@ -1,24 +1,13 @@
-from p5 import *
+import numpy as np
+import cv2
 
+cap = cv2.VideoCapture(r"D:\apex\Apex Legends 2022.10.15 - 12.05.55.03.DVR.mp4")
 
-def draw():
-    background(51)
-    translate(mouse_x, mouse_y)
-    fill(255)
-    stroke(255)
-    stroke_weight(2)
-    begin_shape()
-    vertex(0, -50)
-    vertex(14, -20)
-    vertex(47, -15)
-    vertex(23, 7)
-    vertex(29, 40)
-    vertex(0, 25)
-    vertex(-29, 40)
-    vertex(-23, 7)
-    vertex(-47, -15)
-    vertex(-14, -20)
-    end_shape("CLOSE")
+while cap.isOpened():
+    ret, frame = cap.read()
+    cv2.imshow("frame", frame)
+    if cv2.waitKey(1) & 0xFF == ord("q"):
+        break
 
-
-run()
+cap.release()
+cv2.destroyAllWindows()

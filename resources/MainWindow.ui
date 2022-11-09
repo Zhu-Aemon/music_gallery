@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1500</width>
-    <height>1000</height>
+    <width>1438</width>
+    <height>934</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,20 +17,21 @@
    <widget class="QStackedWidget" name="stackedWidget">
     <property name="geometry">
      <rect>
-      <x>230</x>
+      <x>220</x>
       <y>0</y>
       <width>1200</width>
-      <height>1000</height>
+      <height>851</height>
      </rect>
     </property>
     <property name="styleSheet">
      <string notr="true">QStackedWidget
 {
 	border-radius: 9px;
+	border-bottom: 1px solid #eaeaea;
 }</string>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>0</number>
     </property>
     <widget class="QWidget" name="page_3"/>
     <widget class="QWidget" name="page">
@@ -38,7 +39,7 @@
       <property name="geometry">
        <rect>
         <x>30</x>
-        <y>34</y>
+        <y>60</y>
         <width>111</width>
         <height>31</height>
        </rect>
@@ -59,9 +60,9 @@
       <property name="geometry">
        <rect>
         <x>30</x>
-        <y>90</y>
+        <y>130</y>
         <width>1200</width>
-        <height>810</height>
+        <height>701</height>
        </rect>
       </property>
       <property name="minimumSize">
@@ -139,7 +140,7 @@ QTableWidget::item {
       <x>10</x>
       <y>0</y>
       <width>200</width>
-      <height>920</height>
+      <height>910</height>
      </rect>
     </property>
     <property name="font">
@@ -219,7 +220,7 @@ QListWidget::item:selected
       <x>210</x>
       <y>0</y>
       <width>10</width>
-      <height>920</height>
+      <height>910</height>
      </rect>
     </property>
     <property name="styleSheet">
@@ -234,8 +235,8 @@ QListWidget::item:selected
      <rect>
       <x>1</x>
       <y>0</y>
-      <width>9</width>
-      <height>920</height>
+      <width>10</width>
+      <height>910</height>
      </rect>
     </property>
     <property name="styleSheet">
@@ -318,6 +319,114 @@ QListWidget::item:selected
     </property>
     <property name="text">
      <string>Gallery</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="play_music">
+    <property name="geometry">
+     <rect>
+      <x>354</x>
+      <y>865</y>
+      <width>32</width>
+      <height>32</height>
+     </rect>
+    </property>
+    <property name="cursor">
+     <cursorShape>PointingHandCursor</cursorShape>
+    </property>
+    <property name="mouseTracking">
+     <bool>true</bool>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton
+{
+	margin: 0px;
+	border: 0px;
+}
+</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="last_song">
+    <property name="geometry">
+     <rect>
+      <x>319</x>
+      <y>865</y>
+      <width>32</width>
+      <height>32</height>
+     </rect>
+    </property>
+    <property name="cursor">
+     <cursorShape>PointingHandCursor</cursorShape>
+    </property>
+    <property name="mouseTracking">
+     <bool>true</bool>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton
+{
+	margin: 0px;
+	border: 0px;
+}
+</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="next_song">
+    <property name="geometry">
+     <rect>
+      <x>389</x>
+      <y>865</y>
+      <width>32</width>
+      <height>32</height>
+     </rect>
+    </property>
+    <property name="cursor">
+     <cursorShape>PointingHandCursor</cursorShape>
+    </property>
+    <property name="mouseTracking">
+     <bool>true</bool>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton
+{
+	margin: 0px;
+	border: 0px;
+}
+</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="cover">
+    <property name="geometry">
+     <rect>
+      <x>520</x>
+      <y>858</y>
+      <width>47</width>
+      <height>47</height>
+     </rect>
+    </property>
+    <property name="cursor">
+     <cursorShape>PointingHandCursor</cursorShape>
+    </property>
+    <property name="mouseTracking">
+     <bool>true</bool>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton
+{
+	margin: 0px;
+	border: 0px;
+}
+</string>
+    </property>
+    <property name="text">
+     <string/>
     </property>
    </widget>
   </widget>
