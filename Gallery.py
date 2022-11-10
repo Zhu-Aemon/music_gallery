@@ -8,19 +8,32 @@ class Core:
 
     @staticmethod
     def source_scan(paths: list) -> list:
+        """
+        对设置中选择的路径进行扫描，获取音乐的路径列表（目前只支持mp3）
+        :param paths: 需要扫描的路径
+        :return: 所有音乐的路径组成的列表
+        """
         music_list = []
-        for path in paths:
-            for root, dirs, files in os.walk(path):
-                for name in files:
-                    assert isinstance(name, str), 'TypeError: name is not instance of str'
-                    if name.endswith('.mp3') or name.endswith('.aac') or name.endswith('.flac'):
-                        assert isinstance(root, str), 'TypeError: variable root is not instance of str!'
-                        root = root.replace('\\', '/')
-                        music_list.append(f'{root}/{name}')
+        try:
+            for path in paths:
+                for root, dirs, files in os.walk(path):
+                    for name in files:
+                        assert isinstance(name, str), 'TypeError: name is not instance of str'
+                        if name.endswith('.mp3') or name.endswith('.aac') or name.endswith('.flac'):
+                            assert isinstance(root, str), 'TypeError: variable root is not instance of str!'
+                            root = root.replace('\\', '/')
+                            music_list.append(f'{root}/{name}')
+        except TypeError:
+            pass
         return music_list
 
     @staticmethod
-    def get_mp3_info(path: str) -> list:
+    def get_mp3_info(path: str) -> tuple:
+        """
+        获取一首歌的相关信息
+        :param path: 这一首歌的路径
+        :return: 返回一个元组(歌曲标题, 歌手, 歌曲所在专辑)
+        """
         assert path.endswith('.mp3'), 'MusicTypeError: function get_mp3_info takes in mp3 file'
         file = File(path)
         mp3_title = file.tags['TIT2'].text[0]
@@ -33,6 +46,12 @@ class Core:
 
     @staticmethod
     def save_cover(filepath, filename):
+        """
+        将指定的歌曲的封面保存下来
+        :param filepath: 歌曲所在路径
+        :param filename: 想要将封面图片保存至的路径
+        :return: None
+        """
         file = File(filepath)
         if '.' not in filename:
             filename = f'{filename}.jpg'
