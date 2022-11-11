@@ -16,6 +16,7 @@ class Core:
         :param paths: 需要扫描的路径
         :return: 所有音乐的路径组成的列表
         """
+
         music_list = []
         try:
             for path in paths:
@@ -37,6 +38,7 @@ class Core:
         :param path: 这一首歌的路径
         :return: 返回一个元组(歌曲标题, 歌手, 歌曲所在专辑)
         """
+
         assert path.endswith('.mp3'), 'MusicTypeError: function get_mp3_info takes in mp3 file'
         file = File(path)
         mp3_title = file.tags['TIT2'].text[0]
@@ -55,6 +57,7 @@ class Core:
         :param filename: 想要将封面图片保存至的路径
         :return: None
         """
+
         file = File(filepath)
         if '.' not in filename:
             filename = f'{filename}.jpg'

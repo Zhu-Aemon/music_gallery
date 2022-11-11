@@ -31,6 +31,9 @@ class MainWindow(QMainWindow):
         self.song_playing = None
         self.state = None
         self.progress_thread = None
+        self.break_time = None
+        self.current_progress = 0
+        self.song = None
 
     def window_init(self):
         """
@@ -53,7 +56,6 @@ class MainWindow(QMainWindow):
         self.set_icon(self.ui.play_music, r'resources-inverted/play_icon_gray.png', size=32)
         self.set_icon(self.ui.last_song, r'resources-inverted/last_song_gray.png', size=32)
         self.set_icon(self.ui.next_song, r'resources-inverted/next_song_gray.png', size=32)
-        # self.set_icon(self.ui.song_cover, r'example.jpg', size=47)
         self.set_list_icon(exception=None)
 
         # 设置初始化歌曲名与信息值， 以及进度条进度
@@ -199,6 +201,7 @@ class MainWindow(QMainWindow):
 
         if self.state == "playing":
             self.pause_play()
+            self.current_progress = 0
         song_path, title, artist, album = self.get_current_song_info()
 
         self.set_icon(self.ui.play_music, r'resources-inverted/pause_gray.png', size=32)
@@ -206,9 +209,9 @@ class MainWindow(QMainWindow):
         self.ui.song_name.setText(title)
         self.ui.song_info.setText(f"{artist} - {album}")
 
-        song = AudioSegment.from_mp3(song_path)
-        self.song_playing = _play_with_simpleaudio(song)
-        self.song_duration = song.duration_seconds
+        self.song = AudioSegment.from_mp3(song_path)
+        self.song_playing = _play_with_simpleaudio(self.song)
+        self.song_duration = self.song.duration_seconds
         self.state = "playing"
 
         self.progress_thread = Thread(target=self.song_progress)
@@ -223,17 +226,28 @@ class MainWindow(QMainWindow):
         self.music_thread = Thread(target=self.song_clicked)
         self.music_thread.start()
 
-    def song_progress(self):
+    def song_progress(self, is_to_continue=False):
         """
         进度条显示
         :return: None
         """
 
-        for i in range(int(self.song_duration)):
-            progress = (i + 1) / self.song_duration
-            self.ui.progressBar.repaint()
-            self.ui.progressBar.setValue(math.floor(progress * 100))
-            time.sleep(1)
+        if not is_to_continue:
+            for i in range(int(self.song_duration)):
+                progress = (i + 1) / self.song_duration
+                self.ui.progressBar.repaint()
+                self.ui.progressBar.setValue(math.floor(progress * 100))
+                self.current_progress = i + 1
+                time.sleep(1)
+            self.ui.progressBar.setValue(100)
+        else:
+            for i in range(int(self.song_duration)):
+                progress = ((i + 1) + self.break_time) / (self.song_duration + self.break_time)
+                self.ui.progressBar.repaint()
+                self.ui.progressBar.setValue(math.floor(progress * 100))
+                self.current_progress = i + 1
+                time.sleep(1)
+            self.ui.progressBar.setValue(100)
 
     def play_button_clicked(self):
         """
@@ -245,6 +259,8 @@ class MainWindow(QMainWindow):
             self.pause_play()
         else:
             self.set_icon(self.ui.play_music, r'resources-inverted/pause_gray.png', size=32)
+            self.continue_play()
+            self.state = "playing"
 
     def pause_play(self):
         """
@@ -256,6 +272,7 @@ class MainWindow(QMainWindow):
         self.state = "stopped"
         self.set_icon(self.ui.play_music, r'resources-inverted/play_icon_gray.png', size=32)
         stop_thread(self.progress_thread)
+        self.break_time = self.current_progress
 
     def set_cover(self, song_path, title, album):
         """
@@ -289,7 +306,7 @@ class MainWindow(QMainWindow):
     def get_current_song_info(self):
         """
         获取当前选中歌曲的路径以及相关信息
-        :return:
+        :return: 一个元组(song_path, title, artist, album)
         """
 
         all_path_list = QSettings('config/all_path_config.ini', QSettings.IniFormat)
@@ -298,6 +315,28 @@ class MainWindow(QMainWindow):
         song_path = path_list[song_index]
         title, artist, album = Core().get_mp3_info(song_path)
         return song_path, title, artist, album
+
+    def crop_song(self):
+        """
+        切割歌曲，从而使得能够继续播放歌曲
+        :return: None
+        """
+
+        cropped_song = self.song[(self.break_time * 1000): math.floor(self.song_duration * 1000)]
+        cropped_song.export(out_f=r"tmp/tmp.mp3", format='mp3')
+
+    def continue_play(self):
+        """
+        继续播放刚刚暂停的歌曲
+        :return: None
+        """
+        self.crop_song()
+        self.song = AudioSegment.from_mp3(r"tmp/tmp.mp3")
+        self.song_playing = _play_with_simpleaudio(self.song)
+        self.song_duration = self.song.duration_seconds
+
+        self.progress_thread = Thread(target=self.song_progress, args=(True,))
+        self.progress_thread.start()
 
 
 if __name__ == "__main__":
