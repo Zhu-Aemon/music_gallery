@@ -1,13 +1,24 @@
-import numpy as np
-import cv2
+import vlc
+import playsound
+from pydub import AudioSegment
+import os
+from pydub.playback import play
+from threading import Thread
 
-cap = cv2.VideoCapture(r"D:\apex\Apex Legends 2022.10.15 - 12.05.55.03.DVR.mp4")
+AudioSegment.converter = os.getcwd() + "\\ffmpeg.exe"
+AudioSegment.ffprobe = os.getcwd() + "\\ffprobe.exe"
+sound = AudioSegment.from_mp3(r"E:\CloudMusic\Felicity - Burnt Sugar.mp3")
 
-while cap.isOpened():
-    ret, frame = cap.read()
-    cv2.imshow("frame", frame)
-    if cv2.waitKey(1) & 0xFF == ord("q"):
-        break
+# vlc.MediaPlayer(r"E:\CloudMusic\Abel Korzeniowski - Dance For Me Wallis.mp3").play()
+# playsound.playsound(r"E:\CloudMusic\Abel Korzeniowski - Dance For Me Wallis.mp3", True)
+# song = AudioSegment.from_mp3(r"E:\CloudMusic\Abel Korzeniowski - Dance For Me Wallis.mp3")
+print(sound.duration_seconds)
 
-cap.release()
-cv2.destroyAllWindows()
+
+def play_song():
+    while True:
+        play(sound)
+
+
+t = Thread(target=play_song())
+t.start()

@@ -1,4 +1,7 @@
 import os
+import inspect
+import ctypes
+
 from mutagen import File
 
 
@@ -58,3 +61,22 @@ class Core:
         with open(filename, "wb") as f:
             f.write(file.tags['APIC:'].data)
             f.close()
+
+
+def _async_raise(tid, ex_ctype):
+    """raises the exception, performs cleanup if needed"""
+    tid = ctypes.c_long(tid)
+    if not inspect.isclass(ex_ctype):
+        ex_ctype = type(ex_ctype)
+    res = ctypes.pythonapi.PyThreadState_SetAsyncExc(tid, ctypes.py_object(ex_ctype))
+    if res == 0:
+        raise ValueError("invalid thread id")
+    elif res != 1:
+        # """if it returns a number greater than one, you're in trouble,
+        # and you should call it again with exc=NULL to revert the effect"""
+        ctypes.pythonapi.PyThreadState_SetAsyncExc(tid, None)
+        raise SystemError("PyThreadState_SetAsyncExc failed")
+
+
+def stop_thread(thread):
+    _async_raise(thread.ident, SystemExit)

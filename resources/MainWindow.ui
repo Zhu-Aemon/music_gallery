@@ -459,10 +459,10 @@ QProgressBar::chunk {
    <widget class="QLabel" name="song_name">
     <property name="geometry">
      <rect>
-      <x>780</x>
-      <y>858</y>
-      <width>131</width>
-      <height>16</height>
+      <x>574</x>
+      <y>859</y>
+      <width>541</width>
+      <height>20</height>
      </rect>
     </property>
     <property name="font">
@@ -483,10 +483,10 @@ QProgressBar::chunk {
    <widget class="QLabel" name="song_info">
     <property name="geometry">
      <rect>
-      <x>756</x>
-      <y>880</y>
-      <width>181</width>
-      <height>16</height>
+      <x>588</x>
+      <y>878</y>
+      <width>511</width>
+      <height>20</height>
      </rect>
     </property>
     <property name="font">
