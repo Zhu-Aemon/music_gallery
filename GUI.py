@@ -2,6 +2,7 @@ import getpass
 import math
 import os
 import time
+import faulthandler
 
 from PySide2.QtWidgets import QApplication, QMainWindow, QTableWidgetItem, QAbstractItemView
 from PySide2.QtUiTools import QUiLoader
@@ -25,6 +26,7 @@ class MainWindow(QMainWindow):
         self.window_init()
         self.setting_window = Setting()
         self.signal_process()
+
         self.song_duration = 0
         self.music_thread = Thread()
         self.username = getpass.getuser()
@@ -34,6 +36,8 @@ class MainWindow(QMainWindow):
         self.break_time = None
         self.current_progress = 0
         self.song = None
+        self.loop_state = "loop"
+        self.playList = None
 
     def window_init(self):
         """
@@ -172,6 +176,7 @@ class MainWindow(QMainWindow):
         source_settings = QSettings('config/source_config.ini', QSettings.IniFormat)
         path_list = source_settings.value('source_files')
         all_path_list = Core().source_scan(path_list)
+        self.playList = all_path_list
         all_path_settings = QSettings('config/all_path_config.ini', QSettings.IniFormat)
         all_path_settings.setValue('all_path', all_path_list)
         self.ui.tableWidget.setRowCount(len(all_path_list))
@@ -240,6 +245,7 @@ class MainWindow(QMainWindow):
                 self.current_progress = i + 1
                 time.sleep(1)
             self.ui.progressBar.setValue(100)
+            self.set_icon(self.ui.play_music, r'resources-inverted/play_icon_gray.png', size=32)
         else:
             for i in range(int(self.song_duration)):
                 progress = ((i + 1) + self.break_time) / (self.song_duration + self.break_time)
@@ -248,6 +254,7 @@ class MainWindow(QMainWindow):
                 self.current_progress = i + 1
                 time.sleep(1)
             self.ui.progressBar.setValue(100)
+            self.set_icon(self.ui.play_music, r'resources-inverted/play_icon_gray.png', size=32)
 
     def play_button_clicked(self):
         """
@@ -271,7 +278,8 @@ class MainWindow(QMainWindow):
         self.song_playing.stop()
         self.state = "stopped"
         self.set_icon(self.ui.play_music, r'resources-inverted/play_icon_gray.png', size=32)
-        stop_thread(self.progress_thread)
+        if self.progress_thread.is_alive():
+            stop_thread(self.progress_thread)
         self.break_time = self.current_progress
 
     def set_cover(self, song_path, title, album):
@@ -330,6 +338,7 @@ class MainWindow(QMainWindow):
         继续播放刚刚暂停的歌曲
         :return: None
         """
+
         self.crop_song()
         self.song = AudioSegment.from_mp3(r"tmp/tmp.mp3")
         self.song_playing = _play_with_simpleaudio(self.song)
@@ -340,6 +349,8 @@ class MainWindow(QMainWindow):
 
 
 if __name__ == "__main__":
+    faulthandler.enable()
+
     app = QApplication([])
     app.setStyle("plastique")
     mw = MainWindow()

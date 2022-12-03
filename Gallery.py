@@ -5,7 +5,7 @@ import ctypes
 from mutagen import File
 
 
-class Core:
+class Core(object):
     def __init__(self):
         pass
 
@@ -41,8 +41,14 @@ class Core:
 
         assert path.endswith('.mp3'), 'MusicTypeError: function get_mp3_info takes in mp3 file'
         file = File(path)
-        mp3_title = file.tags['TIT2'].text[0]
-        mp3_artist = file.tags['TPE1'].text[0]
+        try:
+            mp3_title = file.tags['TIT2'].text[0]
+        except KeyError:
+            mp3_title = ''
+        try:
+            mp3_artist = file.tags['TPE1'].text[0]
+        except KeyError:
+            mp3_artist = ''
         try:
             mp3_album = file.tags['TALB'].text[0]
         except KeyError:
