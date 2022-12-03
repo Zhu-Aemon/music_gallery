@@ -21,12 +21,6 @@ from threading import Thread
 class MainWindow(QMainWindow):
 
     def __init__(self):
-        super().__init__()
-        self.ui = QUiLoader().load("resources/MainWindow.ui")
-        self.window_init()
-        self.setting_window = Setting()
-        self.signal_process()
-
         self.song_duration = 0
         self.music_thread = Thread()
         self.username = getpass.getuser()
@@ -38,6 +32,13 @@ class MainWindow(QMainWindow):
         self.song = None
         self.loop_state = "loop"
         self.playList = None
+        self.index = None
+
+        super().__init__()
+        self.ui = QUiLoader().load("resources/MainWindow.ui")
+        self.window_init()
+        self.setting_window = Setting()
+        self.signal_process()
 
     def window_init(self):
         """
@@ -207,20 +208,7 @@ class MainWindow(QMainWindow):
         if self.state == "playing":
             self.pause_play()
             self.current_progress = 0
-        song_path, title, artist, album = self.get_current_song_info()
-
-        self.set_icon(self.ui.play_music, r'resources-inverted/pause_gray.png', size=32)
-        self.set_cover(song_path, title, album)
-        self.ui.song_name.setText(title)
-        self.ui.song_info.setText(f"{artist} - {album}")
-
-        self.song = AudioSegment.from_mp3(song_path)
-        self.song_playing = _play_with_simpleaudio(self.song)
-        self.song_duration = self.song.duration_seconds
-        self.state = "playing"
-
-        self.progress_thread = Thread(target=self.song_progress)
-        self.progress_thread.start()
+        self.play_song()
 
     def play_song_thread(self):
         """
@@ -255,6 +243,8 @@ class MainWindow(QMainWindow):
                 time.sleep(1)
             self.ui.progressBar.setValue(100)
             self.set_icon(self.ui.play_music, r'resources-inverted/play_icon_gray.png', size=32)
+        if not self.music_thread.is_alive():
+            self.play_next_song()
 
     def play_button_clicked(self):
         """
@@ -317,10 +307,8 @@ class MainWindow(QMainWindow):
         :return: 一个元组(song_path, title, artist, album)
         """
 
-        all_path_list = QSettings('config/all_path_config.ini', QSettings.IniFormat)
-        path_list = all_path_list.value('all_path')
         song_index = self.ui.tableWidget.currentRow()
-        song_path = path_list[song_index]
+        song_path = self.playList[song_index]
         title, artist, album = Core().get_mp3_info(song_path)
         return song_path, title, artist, album
 
@@ -345,6 +333,33 @@ class MainWindow(QMainWindow):
         self.song_duration = self.song.duration_seconds
 
         self.progress_thread = Thread(target=self.song_progress, args=(True,))
+        self.progress_thread.start()
+
+    def play_next_song(self):
+        if not self.music_thread.is_alive():
+            if self.index != self.ui.tableWidget.rowCount() - 1:
+                self.ui.tableWidget.selectRow(self.index + 1)
+                self.play_song()
+            else:
+                self.index = -1
+                self.play_next_song()
+
+    def play_song(self):
+        song_path, title, artist, album = self.get_current_song_info()
+
+        self.index = self.ui.tableWidget.currentRow()
+
+        self.set_icon(self.ui.play_music, r'resources-inverted/pause_gray.png', size=32)
+        self.set_cover(song_path, title, album)
+        self.ui.song_name.setText(title)
+        self.ui.song_info.setText(f"{artist} - {album}")
+
+        self.song = AudioSegment.from_mp3(song_path)
+        self.song_playing = _play_with_simpleaudio(self.song)
+        self.song_duration = self.song.duration_seconds
+        self.state = "playing"
+
+        self.progress_thread = Thread(target=self.song_progress)
         self.progress_thread.start()
 
 
