@@ -34,6 +34,16 @@ class MainWindow(QMainWindow):
         self.playList = None
         self.index = None
 
+        song_history = QSettings('config/song.ini', QSettings.IniFormat)
+        play_history = song_history.value('song_history')
+        liked_songs = song_history.value('liked')
+        if len(play_history) == 0:
+            play_history = ["I don't like bugs", "I don't like bugs either"]
+            song_history.setValue('song_history', play_history)
+        if len(liked_songs) == 0:
+            liked_songs = ["I don't like bugs", "I don't like bugs either"]
+            song_history.setValue('liked', liked_songs)
+
         super().__init__()
         self.ui = QUiLoader().load("resources/MainWindow.ui")
         self.window_init()
@@ -84,6 +94,9 @@ class MainWindow(QMainWindow):
         self.ui.listWidget.itemSelectionChanged.connect(self.shift_stack)
         self.ui.tableWidget.itemDoubleClicked.connect(self.play_song_thread)
         self.ui.play_music.clicked.connect(self.play_button_clicked)
+        self.ui.next_song.clicked.connect(self.play_next_song)
+        self.ui.last_song.clicked.connect(self.play_last_song)
+        self.ui.like.clicked.connect(self.like_clicked)
 
     @staticmethod
     def set_icon(button, icon, size):
@@ -243,8 +256,9 @@ class MainWindow(QMainWindow):
                 time.sleep(1)
             self.ui.progressBar.setValue(100)
             self.set_icon(self.ui.play_music, r'resources-inverted/play_icon_gray.png', size=32)
-        if not self.music_thread.is_alive():
-            self.play_next_song()
+        self.state = 'stopped'
+        self.play_next_song()
+        # print('playing next song')
 
     def play_button_clicked(self):
         """
@@ -336,13 +350,14 @@ class MainWindow(QMainWindow):
         self.progress_thread.start()
 
     def play_next_song(self):
-        if not self.music_thread.is_alive():
-            if self.index != self.ui.tableWidget.rowCount() - 1:
-                self.ui.tableWidget.selectRow(self.index + 1)
-                self.play_song()
-            else:
-                self.index = -1
-                self.play_next_song()
+        if self.state != 'stopped':
+            self.pause_play()
+        if self.index != self.ui.tableWidget.rowCount() - 1:
+            self.ui.tableWidget.selectRow(self.index + 1)
+            self.play_song()
+        else:
+            self.index = -1
+            self.play_next_song()
 
     def play_song(self):
         song_path, title, artist, album = self.get_current_song_info()
@@ -361,6 +376,44 @@ class MainWindow(QMainWindow):
 
         self.progress_thread = Thread(target=self.song_progress)
         self.progress_thread.start()
+
+        song_history = QSettings('config/song.ini', QSettings.IniFormat)
+        play_history = song_history.value('song_history')
+        liked_songs = song_history.value('liked')
+        play_history.append(song_path)
+        song_history.setValue('song_history', play_history)
+
+        if song_path not in liked_songs:
+            self.set_icon(self.ui.like, r'resources/to-be-like.png', size=25)
+        else:
+            self.set_icon(self.ui.like, r'resources/liked.png', size=25)
+
+    def play_last_song(self):
+        if self.state != 'stopped':
+            self.pause_play()
+        song_history = QSettings('config/song.ini', QSettings.IniFormat)
+        play_history = song_history.value('song_history')
+
+        last_path = play_history[-2]
+        idx = self.playList.index(last_path)
+        self.ui.tableWidget.selectRow(idx)
+        self.play_song()
+
+    def like_clicked(self):
+        song_index = self.ui.tableWidget.currentRow()
+        song_path = self.playList[song_index]
+
+        song_history = QSettings('config/song.ini', QSettings.IniFormat)
+        liked_songs = song_history.value('liked')
+
+        if song_path not in liked_songs:
+            liked_songs.append(song_path)
+            self.set_icon(self.ui.like, r'resources/liked.png', size=23)
+        else:
+            liked_songs.remove(song_path)
+            self.set_icon(self.ui.like, r'resources/to-be-like.png', size=23)
+
+        song_history.setValue('liked', liked_songs)
 
 
 if __name__ == "__main__":
