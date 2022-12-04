@@ -16,6 +16,7 @@ from pydub import AudioSegment
 from pydub.playback import _play_with_simpleaudio
 
 from threading import Thread
+from collections import Counter
 
 
 class MainWindow(QMainWindow):
@@ -31,7 +32,7 @@ class MainWindow(QMainWindow):
         self.current_progress = 0
         self.song = None
         self.loop_state = "loop"
-        self.playList = None
+        self.all_list = None
         self.index = None
 
         song_history = QSettings('config/song.ini', QSettings.IniFormat)
@@ -40,8 +41,20 @@ class MainWindow(QMainWindow):
         if len(play_history) == 0:
             play_history = ["I don't like bugs", "I don't like bugs either"]
             song_history.setValue('song_history', play_history)
+        else:
+            if "I don't like bugs" in play_history:
+                play_history.remove("I don't like bugs")
+            if "I don't like bugs either" in play_history:
+                play_history.remove("I don't like bugs either")
+            song_history.setValue('song_history', play_history)
         if len(liked_songs) == 0:
             liked_songs = ["I don't like bugs", "I don't like bugs either"]
+            song_history.setValue('liked', liked_songs)
+        else:
+            if "I don't like bugs" in liked_songs:
+                liked_songs.remove("I don't like bugs")
+            if "I don't like bugs either" in liked_songs:
+                liked_songs.remove("I don't like bugs either")
             song_history.setValue('liked', liked_songs)
 
         super().__init__()
@@ -82,6 +95,10 @@ class MainWindow(QMainWindow):
         self.display_all_songs()
         self.column_adjust()
 
+        # 加载最近播放
+        self.display_recent_songs()
+        self.recent_column_adjust()
+
     def signal_process(self):
         """
         处理接收到的各种信号
@@ -93,6 +110,7 @@ class MainWindow(QMainWindow):
         self.ui.listWidget.itemSelectionChanged.connect(self.shift_stack)
         self.ui.listWidget.itemSelectionChanged.connect(self.shift_stack)
         self.ui.tableWidget.itemDoubleClicked.connect(self.play_song_thread)
+        self.ui.recentTable.itemDoubleClicked.connect(self.play_song_thread)
         self.ui.play_music.clicked.connect(self.play_button_clicked)
         self.ui.next_song.clicked.connect(self.play_next_song)
         self.ui.last_song.clicked.connect(self.play_last_song)
@@ -181,6 +199,25 @@ class MainWindow(QMainWindow):
             self.ui.tableWidget.item(i, 1).setForeground(QBrush(QColor('#707070')))
             self.ui.tableWidget.item(i, 2).setForeground(QBrush(QColor('#707070')))
 
+    def recent_column_adjust(self):
+        """
+        调整最近播放中table的各列列宽与背景等等
+        :return: None
+        """
+
+        self.ui.recentTable.setColumnWidth(0, 600)
+        self.ui.recentTable.setColumnWidth(1, 250)
+        self.ui.recentTable.setColumnWidth(2, 300)
+        self.ui.recentTable.horizontalHeader().setHidden(True)
+        self.ui.recentTable.verticalHeader().setDefaultSectionSize(35)
+        self.ui.recentTable.verticalHeader().setHidden(True)
+        self.ui.recentTable.setEditTriggers(QAbstractItemView.NoEditTriggers)
+        self.ui.recentTable.setSelectionBehavior(QAbstractItemView.SelectRows)
+        row_number = self.ui.recentTable.rowCount()
+        for i in range(row_number):
+            self.ui.recentTable.item(i, 1).setForeground(QBrush(QColor('#707070')))
+            self.ui.recentTable.item(i, 2).setForeground(QBrush(QColor('#707070')))
+
     def display_all_songs(self):
         """
         从缓存的音乐数据中读取全部音乐，并且在列表中显示出来
@@ -190,7 +227,7 @@ class MainWindow(QMainWindow):
         source_settings = QSettings('config/source_config.ini', QSettings.IniFormat)
         path_list = source_settings.value('source_files')
         all_path_list = Core().source_scan(path_list)
-        self.playList = all_path_list
+        self.all_list = all_path_list
         all_path_settings = QSettings('config/all_path_config.ini', QSettings.IniFormat)
         all_path_settings.setValue('all_path', all_path_list)
         self.ui.tableWidget.setRowCount(len(all_path_list))
@@ -202,6 +239,30 @@ class MainWindow(QMainWindow):
                 self.ui.tableWidget.setItem(index, 0, QTableWidgetItem(title))
                 self.ui.tableWidget.setItem(index, 1, QTableWidgetItem(artist))
                 self.ui.tableWidget.setItem(index, 2, QTableWidgetItem(album))
+
+    def display_recent_songs(self):
+        history_info = QSettings(r'config/song.ini', QSettings.IniFormat)
+        recent_list = history_info.value('song_history')
+
+        if "I don't like bugs" in recent_list:
+            recent_list.remove("I don't like bugs")
+        if "I don't like bugs either" in recent_list:
+            recent_list.remove("I don't like bugs either")
+
+        history_stats = Counter(recent_list)
+        recent_list_displayed = list(set(recent_list))
+        recent_list_displayed.sort(key=recent_list.index)
+        assert isinstance(recent_list_displayed, list), 'fatal error!'
+        self.ui.recentTable.setRowCount(len(recent_list_displayed))
+
+        for index in range(len(recent_list_displayed)):
+            path = recent_list_displayed[index]
+            assert isinstance(path, str), 'path is not str!'
+            if path.endswith('mp3'):
+                title, artist, album = Core().get_mp3_info(path)
+                self.ui.recentTable.setItem(index, 0, QTableWidgetItem(title))
+                self.ui.recentTable.setItem(index, 1, QTableWidgetItem(artist))
+                self.ui.recentTable.setItem(index, 2, QTableWidgetItem(album))
 
     def shift_stack(self):
         """
@@ -322,7 +383,7 @@ class MainWindow(QMainWindow):
         """
 
         song_index = self.ui.tableWidget.currentRow()
-        song_path = self.playList[song_index]
+        song_path = self.all_list[song_index]
         title, artist, album = Core().get_mp3_info(song_path)
         return song_path, title, artist, album
 
@@ -384,9 +445,9 @@ class MainWindow(QMainWindow):
         song_history.setValue('song_history', play_history)
 
         if song_path not in liked_songs:
-            self.set_icon(self.ui.like, r'resources/to-be-like.png', size=25)
+            self.set_icon(self.ui.like, r'resources/to-be-like.png', size=23)
         else:
-            self.set_icon(self.ui.like, r'resources/liked.png', size=25)
+            self.set_icon(self.ui.like, r'resources/liked.png', size=23)
 
     def play_last_song(self):
         if self.state != 'stopped':
@@ -395,13 +456,13 @@ class MainWindow(QMainWindow):
         play_history = song_history.value('song_history')
 
         last_path = play_history[-2]
-        idx = self.playList.index(last_path)
+        idx = self.all_list.index(last_path)
         self.ui.tableWidget.selectRow(idx)
         self.play_song()
 
     def like_clicked(self):
         song_index = self.ui.tableWidget.currentRow()
-        song_path = self.playList[song_index]
+        song_path = self.all_list[song_index]
 
         song_history = QSettings('config/song.ini', QSettings.IniFormat)
         liked_songs = song_history.value('liked')
