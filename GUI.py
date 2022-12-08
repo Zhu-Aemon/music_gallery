@@ -4,7 +4,7 @@ import os
 import time
 import faulthandler
 
-from PySide2.QtWidgets import QApplication, QMainWindow, QTableWidgetItem, QAbstractItemView
+from PySide2.QtWidgets import QApplication, QMainWindow, QTableWidgetItem, QAbstractItemView, QMenu, QAction
 from PySide2.QtUiTools import QUiLoader
 from PySide2.QtGui import QPalette, QImage, QPixmap, QBrush, QColor
 from PySide2.QtCore import Qt, QSize, QSettings
@@ -17,6 +17,7 @@ from pydub.playback import _play_with_simpleaudio
 
 from threading import Thread
 from collections import Counter
+from functools import partial
 
 
 class MainWindow(QMainWindow):
@@ -35,6 +36,66 @@ class MainWindow(QMainWindow):
         self.all_list = None
         self.index = None
 
+        self.config_init()
+        super().__init__()
+        self.ui = QUiLoader().load("resources/MainWindow.ui")
+        self.window_init()
+        self.setting_window = Setting()
+        self.signal_process()
+
+    def window_init(self):
+        """
+        初始化窗口的标题、背景颜色、图标等相关元素，并且预加载各个侧边栏的相关资源内容
+        :return: None
+        """
+
+        # 设置窗口标题
+        self.ui.setWindowTitle("Music Gallery")
+
+        # 设置背景颜色
+        palette = self.ui.palette()
+        palette.setColor(QPalette.Background, '#f9eeff')
+        self.ui.setPalette(palette)
+        self.ui.setAutoFillBackground(True)
+
+        # 设置界面上的所有图标
+        self.set_icon(self.ui.settings, r'resources/setting_button.png', size=23)
+        self.set_icon(self.ui.add, r'resources/add.png', size=23)
+        self.set_icon(self.ui.play_music, r'resources-inverted/play_icon_gray.png', size=32)
+        self.set_icon(self.ui.last_song, r'resources-inverted/last_song_gray.png', size=32)
+        self.set_icon(self.ui.next_song, r'resources-inverted/next_song_gray.png', size=32)
+        self.set_list_icon(exception=None)
+
+        # 设置初始化歌曲名与信息值， 以及进度条进度
+        self.ui.song_name.setText("")
+        self.ui.song_info.setText("")
+        self.ui.progressBar.setValue(0)
+
+        # 加载所有音乐中的有关内容，并且调整表格列宽
+        self.display_all_songs()
+        self.table_setting()
+
+    def signal_process(self):
+        """
+        处理接收到的各种信号
+        :return: None
+        """
+
+        self.ui.listWidget.itemSelectionChanged.connect(self.change_icon)
+        self.ui.settings.clicked.connect(self.show_setting)
+        self.ui.listWidget.itemSelectionChanged.connect(self.shift_stack)
+        self.ui.listWidget.itemSelectionChanged.connect(self.shift_stack)
+        self.ui.tableWidget.itemDoubleClicked.connect(self.play_song_thread)
+        self.ui.play_music.clicked.connect(self.play_button_clicked)
+        self.ui.next_song.clicked.connect(self.play_next_song)
+        self.ui.last_song.clicked.connect(self.play_last_song)
+        self.ui.like.clicked.connect(self.like_clicked)
+
+        self.ui.tableWidget.setContextMenuPolicy(Qt.CustomContextMenu)
+        self.ui.tableWidget.customContextMenuRequested.connect(self.show_table_menu)
+
+    @staticmethod
+    def config_init():
         song_history = QSettings('config/song.ini', QSettings.IniFormat)
         play_history = song_history.value('song_history')
         liked_songs = song_history.value('liked')
@@ -56,65 +117,6 @@ class MainWindow(QMainWindow):
             if "I don't like bugs either" in liked_songs:
                 liked_songs.remove("I don't like bugs either")
             song_history.setValue('liked', liked_songs)
-
-        super().__init__()
-        self.ui = QUiLoader().load("resources/MainWindow.ui")
-        self.window_init()
-        self.setting_window = Setting()
-        self.signal_process()
-
-    def window_init(self):
-        """
-        初始化窗口的标题、背景颜色、图标等相关元素，并且预加载各个侧边栏的相关资源内容
-        :return: None
-        """
-
-        # 设置窗口标题
-        self.ui.setWindowTitle("Music Gallery")
-
-        # 设置背景颜色
-        palette = self.ui.palette()
-        palette.setColor(QPalette.Background, '#ffffff')
-        self.ui.setPalette(palette)
-        self.ui.setAutoFillBackground(True)
-
-        # 设置界面上的所有图标
-        self.set_icon(self.ui.settings, r'resources/setting_button.png', size=23)
-        self.set_icon(self.ui.add, r'resources/add.png', size=23)
-        self.set_icon(self.ui.play_music, r'resources-inverted/play_icon_gray.png', size=32)
-        self.set_icon(self.ui.last_song, r'resources-inverted/last_song_gray.png', size=32)
-        self.set_icon(self.ui.next_song, r'resources-inverted/next_song_gray.png', size=32)
-        self.set_list_icon(exception=None)
-
-        # 设置初始化歌曲名与信息值， 以及进度条进度
-        self.ui.song_name.setText("")
-        self.ui.song_info.setText("")
-        self.ui.progressBar.setValue(0)
-
-        # 加载所有音乐中的有关内容，并且调整表格列宽
-        self.display_all_songs()
-        self.column_adjust()
-
-        # 加载最近播放
-        self.display_recent_songs()
-        self.recent_column_adjust()
-
-    def signal_process(self):
-        """
-        处理接收到的各种信号
-        :return: None
-        """
-
-        self.ui.listWidget.itemSelectionChanged.connect(self.change_icon)
-        self.ui.settings.clicked.connect(self.show_setting)
-        self.ui.listWidget.itemSelectionChanged.connect(self.shift_stack)
-        self.ui.listWidget.itemSelectionChanged.connect(self.shift_stack)
-        self.ui.tableWidget.itemDoubleClicked.connect(self.play_song_thread)
-        self.ui.recentTable.itemDoubleClicked.connect(self.play_song_thread)
-        self.ui.play_music.clicked.connect(self.play_button_clicked)
-        self.ui.next_song.clicked.connect(self.play_next_song)
-        self.ui.last_song.clicked.connect(self.play_last_song)
-        self.ui.like.clicked.connect(self.like_clicked)
 
     @staticmethod
     def set_icon(button, icon, size):
@@ -139,8 +141,7 @@ class MainWindow(QMainWindow):
         设置左侧列表选项卡的图标，默认设置的列表图标大小为23px
         """
 
-        icon_list = ['resources/all_music.png', 'resources/recent.png', 'resources/favourite_music.png',
-                     'resources/recommended.png', 'resources/MV.png', 'resources/bilibili.png']
+        icon_list = ['resources/all_music.png', 'resources/recent.png', 'resources/statistic.png']
         if exception is not None:
             for i in range(self.ui.listWidget.count()):
                 if i != exception:
@@ -165,9 +166,7 @@ class MainWindow(QMainWindow):
         :return: None
         """
 
-        icon_list = ['resources-inverted/all_music.png', 'resources-inverted/recent.png',
-                     'resources-inverted/favourite_music.png', 'resources-inverted/recommended.png',
-                     'resources-inverted/MV.png', 'resources-inverted/bilibili.png']
+        icon_list = ['resources-inverted/all_music.png', 'resources-inverted/recent.png', 'resources-inverted/statistic-inverted.png']
         index = self.ui.listWidget.currentRow()
         img = QImage(icon_list[index])
         pixmap = QPixmap(img)
@@ -180,13 +179,13 @@ class MainWindow(QMainWindow):
     def show_setting(self):
         self.setting_window.window.show()
 
-    def column_adjust(self):
+    def table_setting(self):
         """
         调整所有音乐中table的各列列宽
         :return: None
         """
 
-        self.ui.tableWidget.setColumnWidth(0, 600)
+        self.ui.tableWidget.setColumnWidth(0, 550)
         self.ui.tableWidget.setColumnWidth(1, 250)
         self.ui.tableWidget.setColumnWidth(2, 300)
         self.ui.tableWidget.horizontalHeader().setHidden(True)
@@ -194,29 +193,13 @@ class MainWindow(QMainWindow):
         self.ui.tableWidget.verticalHeader().setHidden(True)
         self.ui.tableWidget.setEditTriggers(QAbstractItemView.NoEditTriggers)
         self.ui.tableWidget.setSelectionBehavior(QAbstractItemView.SelectRows)
+        self.ui.tableWidget.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        self.ui.tableWidget.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        # self.ui.tableWidget.setSelectionMode(QAbstractItemView.SingleSelection)
         row_number = self.ui.tableWidget.rowCount()
         for i in range(row_number):
             self.ui.tableWidget.item(i, 1).setForeground(QBrush(QColor('#707070')))
             self.ui.tableWidget.item(i, 2).setForeground(QBrush(QColor('#707070')))
-
-    def recent_column_adjust(self):
-        """
-        调整最近播放中table的各列列宽与背景等等
-        :return: None
-        """
-
-        self.ui.recentTable.setColumnWidth(0, 600)
-        self.ui.recentTable.setColumnWidth(1, 250)
-        self.ui.recentTable.setColumnWidth(2, 300)
-        self.ui.recentTable.horizontalHeader().setHidden(True)
-        self.ui.recentTable.verticalHeader().setDefaultSectionSize(35)
-        self.ui.recentTable.verticalHeader().setHidden(True)
-        self.ui.recentTable.setEditTriggers(QAbstractItemView.NoEditTriggers)
-        self.ui.recentTable.setSelectionBehavior(QAbstractItemView.SelectRows)
-        row_number = self.ui.recentTable.rowCount()
-        for i in range(row_number):
-            self.ui.recentTable.item(i, 1).setForeground(QBrush(QColor('#707070')))
-            self.ui.recentTable.item(i, 2).setForeground(QBrush(QColor('#707070')))
 
     def display_all_songs(self):
         """
@@ -239,30 +222,6 @@ class MainWindow(QMainWindow):
                 self.ui.tableWidget.setItem(index, 0, QTableWidgetItem(title))
                 self.ui.tableWidget.setItem(index, 1, QTableWidgetItem(artist))
                 self.ui.tableWidget.setItem(index, 2, QTableWidgetItem(album))
-
-    def display_recent_songs(self):
-        history_info = QSettings(r'config/song.ini', QSettings.IniFormat)
-        recent_list = history_info.value('song_history')
-
-        if "I don't like bugs" in recent_list:
-            recent_list.remove("I don't like bugs")
-        if "I don't like bugs either" in recent_list:
-            recent_list.remove("I don't like bugs either")
-
-        history_stats = Counter(recent_list)
-        recent_list_displayed = list(set(recent_list))
-        recent_list_displayed.sort(key=recent_list.index)
-        assert isinstance(recent_list_displayed, list), 'fatal error!'
-        self.ui.recentTable.setRowCount(len(recent_list_displayed))
-
-        for index in range(len(recent_list_displayed)):
-            path = recent_list_displayed[index]
-            assert isinstance(path, str), 'path is not str!'
-            if path.endswith('mp3'):
-                title, artist, album = Core().get_mp3_info(path)
-                self.ui.recentTable.setItem(index, 0, QTableWidgetItem(title))
-                self.ui.recentTable.setItem(index, 1, QTableWidgetItem(artist))
-                self.ui.recentTable.setItem(index, 2, QTableWidgetItem(album))
 
     def shift_stack(self):
         """
@@ -475,6 +434,55 @@ class MainWindow(QMainWindow):
             self.set_icon(self.ui.like, r'resources/to-be-like.png', size=23)
 
         song_history.setValue('liked', liked_songs)
+
+    def show_table_menu(self, position):
+
+        menu_artist = QMenu()
+        menu_album = QMenu()
+
+        item = self.ui.tableWidget.itemAt(position)
+        if not item:
+            return
+        column = item.column()
+
+        if column == 1:
+            artist_all = item.text()
+            if r'/' in artist_all:
+                artist_list = artist_all.split(r'/')
+            else:
+                artist_list = [artist_all]
+
+            actions = {}
+            for artist in artist_list:
+                actions[artist] = QAction(artist, self.ui.tableWidget)
+                menu_artist.addAction(actions[artist])
+
+                # Bind the parameter to the signal handler
+                signal_process = partial(self.show_artist, param=artist)
+
+                # Connect the action to the signal handler
+                actions[artist].triggered.connect(signal_process)
+
+            menu_artist.exec_(self.ui.tableWidget.mapToGlobal(position))
+
+        if column == 2:
+            album = item.text()
+            action = QAction(album, self.ui.tableWidget)
+            menu_album.addAction(action)
+
+            # Bind the parameter to the signal handler
+            signal_process = partial(self.show_album, param=album)
+
+            # Connect the action to the signal handler
+            action.triggered.connect(signal_process)
+
+            menu_album.exec_(self.ui.tableWidget.mapToGlobal(position))
+
+    def show_artist(self, artist):
+        print(artist)
+
+    def show_album(self, album):
+        print(album)
 
 
 if __name__ == "__main__":

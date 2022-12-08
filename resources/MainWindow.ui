@@ -44,12 +44,11 @@
     <property name="styleSheet">
      <string notr="true">QStackedWidget
 {
-	border-radius: 9px;
-	border-bottom: 1px solid #eaeaea;
+
 }</string>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>1</number>
     </property>
     <widget class="QWidget" name="page_3"/>
     <widget class="QWidget" name="page">
@@ -79,7 +78,7 @@
        <rect>
         <x>30</x>
         <y>115</y>
-        <width>1200</width>
+        <width>1160</width>
         <height>725</height>
        </rect>
       </property>
@@ -106,9 +105,11 @@
       </property>
       <property name="styleSheet">
        <string notr="true">QTableWidget {
-	background: transparent;
-	border: none;
+	background-color: #d5e3f3;
+ 	border: none;
 	outline: none;
+	border-radius: 15px;
+	padding: 10px;
 }
 QHeaderView::section{
 	text-align:center;
@@ -116,12 +117,20 @@ QHeaderView::section{
 	margin:0px;
 	border-left-width:0;
 }
+QTableWidget::item {
+	
+}
 QTableWidget::item:selected{
 	outline: none;
-	background-color: #dbe7f4;
+    background-color: #dbe7f4;
 }
-QTableWidget::item {
-	border-bottom:1px solid #eaeaea;
+QTableWidget::item:nth-child(1) {
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+}
+QTableWidget::item:nth-child(3) {
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
 }</string>
       </property>
       <property name="showGrid">
@@ -147,80 +156,7 @@ QTableWidget::item {
       </column>
      </widget>
     </widget>
-    <widget class="QWidget" name="page_2">
-     <widget class="QTableWidget" name="recentTable">
-      <property name="geometry">
-       <rect>
-        <x>30</x>
-        <y>115</y>
-        <width>1200</width>
-        <height>725</height>
-       </rect>
-      </property>
-      <property name="minimumSize">
-       <size>
-        <width>951</width>
-        <height>0</height>
-       </size>
-      </property>
-      <property name="font">
-       <font>
-        <family>微软雅黑</family>
-        <pointsize>10</pointsize>
-        <weight>50</weight>
-        <italic>false</italic>
-        <bold>false</bold>
-       </font>
-      </property>
-      <property name="cursor" stdset="0">
-       <cursorShape>ArrowCursor</cursorShape>
-      </property>
-      <property name="focusPolicy">
-       <enum>Qt::NoFocus</enum>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">QTableWidget {
-	background: transparent;
-	border: none;
-	outline: none;
-}
-QHeaderView::section{
-	text-align:center;
-	padding:3px;
-	margin:0px;
-	border-left-width:0;
-}
-QTableWidget::item:selected{
-	outline: none;
-	background-color: #dbe7f4;
-}
-QTableWidget::item {
-	border-bottom:1px solid #eaeaea;
-}</string>
-      </property>
-      <property name="showGrid">
-       <bool>false</bool>
-      </property>
-      <property name="wordWrap">
-       <bool>false</bool>
-      </property>
-      <column>
-       <property name="text">
-        <string>Song</string>
-       </property>
-      </column>
-      <column>
-       <property name="text">
-        <string>Artist</string>
-       </property>
-      </column>
-      <column>
-       <property name="text">
-        <string>Album</string>
-       </property>
-      </column>
-     </widget>
-    </widget>
+    <widget class="QWidget" name="page_2"/>
     <widget class="QWidget" name="page_4"/>
     <widget class="QWidget" name="page_5"/>
     <widget class="QWidget" name="page_6"/>
@@ -228,9 +164,9 @@ QTableWidget::item {
    <widget class="QListWidget" name="listWidget">
     <property name="geometry">
      <rect>
-      <x>10</x>
+      <x>9</x>
       <y>0</y>
-      <width>200</width>
+      <width>211</width>
       <height>910</height>
      </rect>
     </property>
@@ -252,12 +188,14 @@ QTableWidget::item {
     <property name="styleSheet">
      <string notr="true">QListWidget 
 {
-    background-color: #dbe7f4;
+    background-color: #c3d9ef;
     border: none;
-	border-raduis: 10px;
+	border-radius: 15px;
     font: 10.5pt &quot;Microsoft Yahei&quot;;
 	outline: 0px;
 	padding-top: 100px;
+	padding-right: 10px;
+	padding-left: 12px;
 }
 QListWidget::item 
 {
@@ -271,7 +209,7 @@ QListWidget::item:selected
 {
     color: #ffffff;
     background-color: rgb(46, 123, 253);
-	border-radius: 9px;
+	border-radius: 12px;
 }</string>
     </property>
     <item>
@@ -281,65 +219,19 @@ QListWidget::item:selected
     </item>
     <item>
      <property name="text">
-      <string>最近播放</string>
-     </property>
-    </item>
-    <item>
-     <property name="text">
       <string>喜欢的音乐</string>
      </property>
     </item>
     <item>
      <property name="text">
-      <string>今日推荐</string>
+      <string>统计数据</string>
      </property>
     </item>
-    <item>
-     <property name="text">
-      <string>喜欢的MV</string>
-     </property>
-    </item>
-    <item>
-     <property name="text">
-      <string>热门MV推荐</string>
-     </property>
-    </item>
-   </widget>
-   <widget class="QWidget" name="widget_2" native="true">
-    <property name="geometry">
-     <rect>
-      <x>210</x>
-      <y>0</y>
-      <width>10</width>
-      <height>910</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">QWidget{
-	background-color: #dbe7f4;
-	border-right: 1px solid #eaeaea;
-}</string>
-    </property>
-   </widget>
-   <widget class="QWidget" name="widget_3" native="true">
-    <property name="geometry">
-     <rect>
-      <x>1</x>
-      <y>0</y>
-      <width>10</width>
-      <height>910</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">QWidget{
-	background-color: #dbe7f4;
-}</string>
-    </property>
    </widget>
    <widget class="QPushButton" name="settings">
     <property name="geometry">
      <rect>
-      <x>18</x>
+      <x>29</x>
       <y>20</y>
       <width>23</width>
       <height>23</height>
@@ -356,7 +248,7 @@ QListWidget::item:selected
 {
 	margin: 0px;
 	border: 0px;
-	background-color: #dbe7f4;
+	background-color: #c3d9ef;
 }
 </string>
     </property>
@@ -384,7 +276,7 @@ QListWidget::item:selected
 {
 	margin: 0px;
 	border: 0px;
-	background-color: #dbe7f4;
+	background-color: #c3d9ef;
 }</string>
     </property>
     <property name="text">
@@ -412,114 +304,6 @@ QListWidget::item:selected
      <string>Gallery</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="play_music">
-    <property name="geometry">
-     <rect>
-      <x>384</x>
-      <y>865</y>
-      <width>32</width>
-      <height>32</height>
-     </rect>
-    </property>
-    <property name="cursor">
-     <cursorShape>PointingHandCursor</cursorShape>
-    </property>
-    <property name="mouseTracking">
-     <bool>true</bool>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">QPushButton
-{
-	margin: 0px;
-	border: 0px;
-}
-</string>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="last_song">
-    <property name="geometry">
-     <rect>
-      <x>349</x>
-      <y>865</y>
-      <width>32</width>
-      <height>32</height>
-     </rect>
-    </property>
-    <property name="cursor">
-     <cursorShape>PointingHandCursor</cursorShape>
-    </property>
-    <property name="mouseTracking">
-     <bool>true</bool>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">QPushButton
-{
-	margin: 0px;
-	border: 0px;
-}
-</string>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="next_song">
-    <property name="geometry">
-     <rect>
-      <x>419</x>
-      <y>865</y>
-      <width>32</width>
-      <height>32</height>
-     </rect>
-    </property>
-    <property name="cursor">
-     <cursorShape>PointingHandCursor</cursorShape>
-    </property>
-    <property name="mouseTracking">
-     <bool>true</bool>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">QPushButton
-{
-	margin: 0px;
-	border: 0px;
-}
-</string>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="song_cover">
-    <property name="geometry">
-     <rect>
-      <x>520</x>
-      <y>858</y>
-      <width>47</width>
-      <height>47</height>
-     </rect>
-    </property>
-    <property name="cursor">
-     <cursorShape>PointingHandCursor</cursorShape>
-    </property>
-    <property name="mouseTracking">
-     <bool>true</bool>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">QPushButton
-{
-	margin: 0px;
-	border: 0px;
-}
-</string>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-   </widget>
    <widget class="QProgressBar" name="progressBar">
     <property name="geometry">
      <rect>
@@ -533,7 +317,7 @@ QListWidget::item:selected
      <string notr="true">QProgressBar {
 	border: none;
 	border-radius: 2px;
-	background-color: #eaeaea;
+	background-color: #f9eeff;
 	qproperty-textVisible: false;
 }
 
@@ -595,33 +379,186 @@ QProgressBar::chunk {
      <set>Qt::AlignCenter</set>
     </property>
    </widget>
-   <widget class="QPushButton" name="like">
+   <widget class="QWidget" name="widget" native="true">
     <property name="geometry">
      <rect>
-      <x>470</x>
-      <y>868</y>
-      <width>23</width>
-      <height>23</height>
+      <x>500</x>
+      <y>850</y>
+      <width>651</width>
+      <height>61</height>
      </rect>
     </property>
-    <property name="cursor">
-     <cursorShape>PointingHandCursor</cursorShape>
+    <property name="styleSheet">
+     <string notr="true">QWidget {
+	background-color: #d6d5f3;
+	border-radius: 15px;
+}
+</string>
     </property>
-    <property name="mouseTracking">
-     <bool>true</bool>
+    <widget class="QPushButton" name="song_cover">
+     <property name="geometry">
+      <rect>
+       <x>13</x>
+       <y>8</y>
+       <width>47</width>
+       <height>47</height>
+      </rect>
+     </property>
+     <property name="cursor">
+      <cursorShape>PointingHandCursor</cursorShape>
+     </property>
+     <property name="mouseTracking">
+      <bool>true</bool>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QPushButton
+{
+	margin: 0px;
+	border: 0px;
+	border-radius: 5px;
+}
+</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QWidget" name="widget_2" native="true">
+    <property name="geometry">
+     <rect>
+      <x>280</x>
+      <y>850</y>
+      <width>181</width>
+      <height>61</height>
+     </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">QPushButton
+     <string notr="true">QWidget {
+	background-color: #d6d5f3;
+	border-radius: 15px;
+}
+</string>
+    </property>
+    <widget class="QPushButton" name="last_song">
+     <property name="geometry">
+      <rect>
+       <x>15</x>
+       <y>15</y>
+       <width>32</width>
+       <height>32</height>
+      </rect>
+     </property>
+     <property name="cursor">
+      <cursorShape>PointingHandCursor</cursorShape>
+     </property>
+     <property name="mouseTracking">
+      <bool>true</bool>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QPushButton
 {
 	margin: 0px;
 	border: 0px;
 }
 </string>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="play_music">
+     <property name="geometry">
+      <rect>
+       <x>55</x>
+       <y>15</y>
+       <width>32</width>
+       <height>32</height>
+      </rect>
+     </property>
+     <property name="cursor">
+      <cursorShape>PointingHandCursor</cursorShape>
+     </property>
+     <property name="mouseTracking">
+      <bool>true</bool>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QPushButton
+{
+	margin: 0px;
+	border: 0px;
+}
+</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="next_song">
+     <property name="geometry">
+      <rect>
+       <x>95</x>
+       <y>15</y>
+       <width>32</width>
+       <height>32</height>
+      </rect>
+     </property>
+     <property name="cursor">
+      <cursorShape>PointingHandCursor</cursorShape>
+     </property>
+     <property name="mouseTracking">
+      <bool>true</bool>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QPushButton
+{
+	margin: 0px;
+	border: 0px;
+}
+</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="like">
+     <property name="geometry">
+      <rect>
+       <x>140</x>
+       <y>19</y>
+       <width>23</width>
+       <height>23</height>
+      </rect>
+     </property>
+     <property name="cursor">
+      <cursorShape>PointingHandCursor</cursorShape>
+     </property>
+     <property name="mouseTracking">
+      <bool>true</bool>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QPushButton
+{
+	margin: 0px;
+	border: 0px;
+}
+</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
    </widget>
+   <zorder>stackedWidget</zorder>
+   <zorder>listWidget</zorder>
+   <zorder>settings</zorder>
+   <zorder>add</zorder>
+   <zorder>label</zorder>
+   <zorder>widget</zorder>
+   <zorder>song_name</zorder>
+   <zorder>song_info</zorder>
+   <zorder>progressBar</zorder>
+   <zorder>widget_2</zorder>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="actionAbout">
