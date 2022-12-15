@@ -57,7 +57,7 @@ class MainWindow(QMainWindow):
 
         # 设置背景颜色
         palette = self.ui.palette()
-        palette.setColor(QPalette.Background, '#F0F3F6')
+        palette.setColor(QPalette.Background, '#f9f9f9')
         self.ui.setPalette(palette)
         self.ui.setAutoFillBackground(True)
 
@@ -216,7 +216,7 @@ class MainWindow(QMainWindow):
         self.ui.tableWidget.verticalHeader().setHidden(True)
         self.ui.tableWidget.setEditTriggers(QAbstractItemView.NoEditTriggers)
         self.ui.tableWidget.setSelectionBehavior(QAbstractItemView.SelectRows)
-        self.ui.tableWidget.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        # self.ui.tableWidget.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         self.ui.tableWidget.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         # self.ui.tableWidget.setSelectionMode(QAbstractItemView.SingleSelection)
         row_number = self.ui.tableWidget.rowCount()
@@ -264,7 +264,7 @@ class MainWindow(QMainWindow):
         {
             margin: 0px;
             border: 0px;
-            background-color: #ffffff;
+            background-color: #f0f3f6;
         }
         """)
 
@@ -290,9 +290,8 @@ class MainWindow(QMainWindow):
         QTableWidget {
             background-color: #ffffff;
             border: none;
+            border-radius: 5px;
             outline: none;
-            border-radius: 15px;
-            padding: 10px;
         }
         QHeaderView::section{
             text-align:center;
@@ -300,9 +299,16 @@ class MainWindow(QMainWindow):
             margin:0px;
             border-left-width:0;
         }
+        QTableWidget::item {
+            border-bottom:1px solid #eaeaea;
+            padding-left: 10px;
+        }
         QTableWidget::item:selected{
             outline: none;
             background-color: #dbe7f4;
+        }
+        QTableWidget QScrollBar {
+            
         }""")
 
         self.ui.widget.setStyleSheet("""
@@ -329,20 +335,12 @@ class MainWindow(QMainWindow):
         }""")
 
     def set_graphics_effect(self):
-        effect_listWidget = QGraphicsDropShadowEffect(self.ui.listWidget)
-        effect_listWidget.setBlurRadius(10)
-        effect_listWidget.setColor(Qt.gray)
-        effect_listWidget.setOffset(0, 0)
-
         effect_tableWidget = QGraphicsDropShadowEffect(self.ui.tableWidget)
-        effect_tableWidget.setBlurRadius(10)
+        effect_tableWidget.setBlurRadius(3)
         effect_tableWidget.setColor(Qt.gray)
-        effect_tableWidget.setOffset(0, 0)
+        effect_tableWidget.setOffset(0, 1)
 
-        # self.ui.widget.setGraphicsEffect(effect_listWidget)
-        # self.ui.widget_2.setGraphicsEffect(effect_listWidget)
         self.ui.tableWidget.setGraphicsEffect(effect_tableWidget)
-        self.ui.listWidget.setGraphicsEffect(effect_listWidget)
 
     def display_all_songs(self):
         """
@@ -626,7 +624,7 @@ class MainWindow(QMainWindow):
         # Core.image_down(image_url)
         tab = QWidget()
         self.ui.stackedWidget.addWidget(tab)
-        tab.resize(1200, 852)
+        tab.resize(1200, 910)
 
         # background = QPixmap('tmp/background.jpeg')
         # background = background.scaledToWidth(1200)
