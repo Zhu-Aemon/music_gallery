@@ -1,8 +1,19 @@
 import os
 import inspect
 import ctypes
+import urllib.parse
+import time
 
 from mutagen import File
+
+from selenium.webdriver.chrome.options import Options
+from webdriver_manager.chrome import ChromeDriverManager
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.ui import WebDriverWait
+
+from urllib.request import urlretrieve
 
 
 class Core(object):
@@ -70,6 +81,74 @@ class Core(object):
         with open(filename, "wb") as f:
             f.write(file.tags['APIC:'].data)
             f.close()
+
+    @staticmethod
+    def get_artist_page_url(artist):
+        # Parse the artist name to use in the URL
+        chrome_options = Options()
+        chrome_options.add_argument('--headless')
+        # chrome_options.add_experimental_option('detach', True)
+        chrome_options.add_experimental_option("excludeSwitches", ["enable-logging"])
+        # initialize the Chrome driver
+        driver = webdriver.Chrome(ChromeDriverManager().install(), options=chrome_options)
+
+        url = '/artist/7vk5e3vY1uw9plTHJAMwjN'
+        artist_parsed = urllib.parse.quote(artist)
+
+        # Fetch the content of the webpage
+        driver.get(f"https://open.spotify.com/search/{artist_parsed}/artists")
+
+        # Extract the URL from the first result on the page
+        url_element = WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.XPATH, '/html/body/div[3]/div/div[2]/div[3]/div[1]/div[2]/div[2]/div/div/div[2]/main/div[2]/div/div/div/div[1]/div[1]/div/div[2]/a'))
+        )
+        if url_element:
+            url = url_element.get_attribute('href')
+            return url
+        else:
+            print('failed')
+
+    @staticmethod
+    def get_artist_info(url):
+        style = 'failed'
+
+        chrome_options = Options()
+        chrome_options.add_argument('--headless')
+        # chrome_options.add_experimental_option('detach', True)
+        chrome_options.add_experimental_option("excludeSwitches", ["enable-logging"])
+        # initialize the Chrome driver
+        driver = webdriver.Chrome(ChromeDriverManager().install(), options=chrome_options)
+
+        # Fetch the content of the webpage
+        driver.get(url)
+
+        # /html/body/div[4]/div/div[2]/div[3]/div[1]/div[1]/div/div[1]
+        style_element_parent = WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.CLASS_NAME, 'under-main-view'))
+        )
+        time.sleep(5)
+        style_element_son = style_element_parent.find_element(By.XPATH, 'div')
+        style_element = style_element_son.find_element(By.XPATH, 'div')
+
+        audience = WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.CLASS_NAME, 'Ydwa1P5GkCggtLlSvphs'))
+        )
+
+        if audience:
+            audience = audience.text
+        else:
+            audience = 'error'
+
+        if style_element:
+            style = style_element.get_attribute('style')
+            print(style.split('("')[1].split('")')[0])
+            return style.split('("')[1].split('")')[0], audience
+        else:
+            print('failed')
+
+    @staticmethod
+    def image_down(url):
+        urlretrieve(url, 'tmp/background.jpeg')
 
 
 def _async_raise(tid, ex_ctype):

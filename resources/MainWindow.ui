@@ -48,7 +48,7 @@
 }</string>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>0</number>
     </property>
     <widget class="QWidget" name="page_3"/>
     <widget class="QWidget" name="page">
@@ -104,34 +104,7 @@
        <enum>Qt::NoFocus</enum>
       </property>
       <property name="styleSheet">
-       <string notr="true">QTableWidget {
-	background-color: #d5e3f3;
- 	border: none;
-	outline: none;
-	border-radius: 15px;
-	padding: 10px;
-}
-QHeaderView::section{
-	text-align:center;
-	padding:3px;
-	margin:0px;
-	border-left-width:0;
-}
-QTableWidget::item {
-	
-}
-QTableWidget::item:selected{
-	outline: none;
-    background-color: #dbe7f4;
-}
-QTableWidget::item:nth-child(1) {
-    border-top-left-radius: 5px;
-    border-bottom-left-radius: 5px;
-}
-QTableWidget::item:nth-child(3) {
-    border-top-left-radius: 5px;
-    border-bottom-left-radius: 5px;
-}</string>
+       <string notr="true"/>
       </property>
       <property name="showGrid">
        <bool>false</bool>
@@ -164,10 +137,10 @@ QTableWidget::item:nth-child(3) {
    <widget class="QListWidget" name="listWidget">
     <property name="geometry">
      <rect>
-      <x>9</x>
+      <x>0</x>
       <y>0</y>
       <width>211</width>
-      <height>910</height>
+      <height>934</height>
      </rect>
     </property>
     <property name="font">
@@ -186,31 +159,7 @@ QTableWidget::item:nth-child(3) {
      <bool>true</bool>
     </property>
     <property name="styleSheet">
-     <string notr="true">QListWidget 
-{
-    background-color: #c3d9ef;
-    border: none;
-	border-radius: 15px;
-    font: 10.5pt &quot;Microsoft Yahei&quot;;
-	outline: 0px;
-	padding-top: 100px;
-	padding-right: 10px;
-	padding-left: 12px;
-}
-QListWidget::item 
-{
-    background-color: transparent;
-    color: #000000;
-    border: 0px;
-    padding-left: 5px;
-    height: 38px;
-}
-QListWidget::item:selected 
-{
-    color: #ffffff;
-    background-color: rgb(46, 123, 253);
-	border-radius: 12px;
-}</string>
+     <string notr="true"/>
     </property>
     <item>
      <property name="text">
@@ -231,7 +180,7 @@ QListWidget::item:selected
    <widget class="QPushButton" name="settings">
     <property name="geometry">
      <rect>
-      <x>29</x>
+      <x>20</x>
       <y>20</y>
       <width>23</width>
       <height>23</height>
@@ -244,13 +193,7 @@ QListWidget::item:selected
      <bool>true</bool>
     </property>
     <property name="styleSheet">
-     <string notr="true">QPushButton
-{
-	margin: 0px;
-	border: 0px;
-	background-color: #c3d9ef;
-}
-</string>
+     <string notr="true"/>
     </property>
     <property name="text">
      <string/>
@@ -259,7 +202,7 @@ QListWidget::item:selected
    <widget class="QPushButton" name="add">
     <property name="geometry">
      <rect>
-      <x>180</x>
+      <x>171</x>
       <y>20</y>
       <width>23</width>
       <height>23</height>
@@ -272,12 +215,7 @@ QListWidget::item:selected
      <bool>true</bool>
     </property>
     <property name="styleSheet">
-     <string notr="true">QPushButton
-{
-	margin: 0px;
-	border: 0px;
-	background-color: #c3d9ef;
-}</string>
+     <string notr="true"/>
     </property>
     <property name="text">
      <string/>
@@ -286,7 +224,7 @@ QListWidget::item:selected
    <widget class="QLabel" name="label">
     <property name="geometry">
      <rect>
-      <x>18</x>
+      <x>20</x>
       <y>47</y>
       <width>121</width>
       <height>51</height>
@@ -389,11 +327,7 @@ QProgressBar::chunk {
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">QWidget {
-	background-color: #d6d5f3;
-	border-radius: 15px;
-}
-</string>
+     <string notr="true"/>
     </property>
     <widget class="QPushButton" name="song_cover">
      <property name="geometry">
@@ -434,11 +368,7 @@ QProgressBar::chunk {
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">QWidget {
-	background-color: #d6d5f3;
-	border-radius: 15px;
-}
-</string>
+     <string notr="true"/>
     </property>
     <widget class="QPushButton" name="last_song">
      <property name="geometry">

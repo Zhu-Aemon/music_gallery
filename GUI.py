@@ -4,9 +4,10 @@ import os
 import time
 import faulthandler
 
-from PySide2.QtWidgets import QApplication, QMainWindow, QTableWidgetItem, QAbstractItemView, QMenu, QAction
+from PySide2.QtWidgets import QApplication, QMainWindow, QTableWidgetItem, QAbstractItemView, QMenu, QAction, QWidget, \
+    QLabel, QPushButton, QGraphicsDropShadowEffect
 from PySide2.QtUiTools import QUiLoader
-from PySide2.QtGui import QPalette, QImage, QPixmap, QBrush, QColor
+from PySide2.QtGui import QPalette, QImage, QPixmap, QBrush, QColor, QFont, QIcon, QCursor
 from PySide2.QtCore import Qt, QSize, QSettings
 
 from Setting import Setting
@@ -42,6 +43,8 @@ class MainWindow(QMainWindow):
         self.window_init()
         self.setting_window = Setting()
         self.signal_process()
+        self.set_style_sheet()
+        # self.set_graphics_effect()
 
     def window_init(self):
         """
@@ -54,7 +57,7 @@ class MainWindow(QMainWindow):
 
         # 设置背景颜色
         palette = self.ui.palette()
-        palette.setColor(QPalette.Background, '#f9eeff')
+        palette.setColor(QPalette.Background, '#F0F3F6')
         self.ui.setPalette(palette)
         self.ui.setAutoFillBackground(True)
 
@@ -141,7 +144,7 @@ class MainWindow(QMainWindow):
         设置左侧列表选项卡的图标，默认设置的列表图标大小为23px
         """
 
-        icon_list = ['resources/all_music.png', 'resources/recent.png', 'resources/statistic.png']
+        icon_list = ['resources/all_music.png', 'resources/favourite_music.png', 'resources/statistic.png']
         if exception is not None:
             for i in range(self.ui.listWidget.count()):
                 if i != exception:
@@ -166,7 +169,8 @@ class MainWindow(QMainWindow):
         :return: None
         """
 
-        icon_list = ['resources-inverted/all_music.png', 'resources-inverted/recent.png', 'resources-inverted/statistic-inverted.png']
+        icon_list = ['resources-inverted/all_music.png', 'resources-inverted/favourite_music.png',
+                     'resources-inverted/statistic-inverted.png']
         index = self.ui.listWidget.currentRow()
         img = QImage(icon_list[index])
         pixmap = QPixmap(img)
@@ -200,6 +204,111 @@ class MainWindow(QMainWindow):
         for i in range(row_number):
             self.ui.tableWidget.item(i, 1).setForeground(QBrush(QColor('#707070')))
             self.ui.tableWidget.item(i, 2).setForeground(QBrush(QColor('#707070')))
+
+    def set_style_sheet(self):
+        """
+        rgb(179, 179, 179)
+        rgb(0, 0, 0)
+        rgb(255, 255, 255)
+        rgb(16, 16, 16)
+        rgb(21, 21, 21)
+        rgb(24, 24, 24)
+        :return:
+        """
+        self.ui.listWidget.setStyleSheet("""
+        QListWidget 
+        {
+            background-color: #ffffff;
+            border: none;
+            border-radius: 15px;
+            font: 10.5pt "Microsoft Yahei";
+            outline: 0px;
+            padding-top: 100px;
+            padding-right: 10px;
+            padding-left: 12px;
+        }
+        QListWidget::item 
+        {
+            background-color: transparent;
+            color: #000000;
+            border: 0px;
+            padding-left: 5px;
+            height: 38px;
+        }
+        QListWidget::item:selected 
+        {
+            color: #ffffff;
+            background-color: rgb(46, 123, 253);
+            border-radius: 12px;
+        }""")
+
+        self.ui.settings.setStyleSheet("""
+        QPushButton
+        {
+            margin: 0px;
+            border: 0px;
+            background-color: #ffffff;
+        }
+        """)
+
+        self.ui.add.setStyleSheet("""
+        QPushButton
+        {
+            margin: 0px;
+            border: 0px;
+            background-color: #ffffff;
+        }
+        """)
+
+        # self.ui.label.setStyleSheet("color: rgb(255, 255, 255)")
+        # self.ui.label_2.setStyleSheet("color: rgb(255, 255, 255)")
+
+        self.ui.tableWidget.setStyleSheet("""
+        QTableWidget {
+            background-color: #ffffff;
+            border: none;
+            outline: none;
+            border-radius: 15px;
+            padding: 10px;
+        }
+        QHeaderView::section{
+            text-align:center;
+            padding:3px;
+            margin:0px;
+            border-left-width:0;
+        }
+        QTableWidget::item:selected{
+            outline: none;
+            background-color: #dbe7f4;
+        }""")
+
+        self.ui.widget.setStyleSheet("""
+        QWidget {
+            background-color: #ffffff;
+            border-radius: 15px;
+        }""")
+
+        self.ui.widget_2.setStyleSheet("""
+        QWidget {
+            background-color: #ffffff;
+            border-radius: 15px;
+        }""")
+
+    def set_graphics_effect(self):
+        effect_listWidget = QGraphicsDropShadowEffect(self.ui.listWidget)
+        effect_listWidget.setBlurRadius(10)
+        effect_listWidget.setColor(Qt.gray)
+        effect_listWidget.setOffset(0, 0)
+
+        effect_tableWidget = QGraphicsDropShadowEffect(self.ui.tableWidget)
+        effect_tableWidget.setBlurRadius(10)
+        effect_tableWidget.setColor(Qt.gray)
+        effect_tableWidget.setOffset(0, 0)
+
+        # self.ui.widget.setGraphicsEffect(effect_listWidget)
+        # self.ui.widget_2.setGraphicsEffect(effect_listWidget)
+        self.ui.tableWidget.setGraphicsEffect(effect_tableWidget)
+        self.ui.listWidget.setGraphicsEffect(effect_listWidget)
 
     def display_all_songs(self):
         """
@@ -458,7 +567,7 @@ class MainWindow(QMainWindow):
                 menu_artist.addAction(actions[artist])
 
                 # Bind the parameter to the signal handler
-                signal_process = partial(self.show_artist, param=artist)
+                signal_process = partial(self.show_artist, artist=artist)
 
                 # Connect the action to the signal handler
                 actions[artist].triggered.connect(signal_process)
@@ -471,7 +580,7 @@ class MainWindow(QMainWindow):
             menu_album.addAction(action)
 
             # Bind the parameter to the signal handler
-            signal_process = partial(self.show_album, param=album)
+            signal_process = partial(self.show_album, album=album)
 
             # Connect the action to the signal handler
             action.triggered.connect(signal_process)
@@ -479,17 +588,61 @@ class MainWindow(QMainWindow):
             menu_album.exec_(self.ui.tableWidget.mapToGlobal(position))
 
     def show_artist(self, artist):
-        print(artist)
+        # image_url, text_info = Core.get_artist_info(Core.get_artist_page_url(artist))
+        # Core.image_down(image_url)
+        tab = QWidget()
+        self.ui.stackedWidget.addWidget(tab)
+        tab.resize(1200, 852)
+
+        # background = QPixmap('tmp/background.jpeg')
+        # background = background.scaledToWidth(1200)
+
+        text_label = QLabel(tab)
+        text_label.move(30, 70)
+        text_label.setText(artist)
+        text_label.setStyleSheet("color: black;")
+        text_label.setAlignment(Qt.AlignLeft)
+        font = QFont('Microsoft Yahei UI Semibold', 30)
+        text_label.setFont(font)
+
+        back_button = QPushButton(tab)
+        back_button.resize(23, 23)
+        back_button.move(30, 38)
+        self.set_icon(back_button, r'resources/back.png', size=18)
+        back_button.setCursor(QCursor(Qt.PointingHandCursor))
+        back_button.setStyleSheet("""
+        QPushButton
+        {
+            margin: 0px;
+            border: 0px;
+            background-color: none;
+        }""")
+
+        # image_label = QLabel(tab)
+        # image_label.setPixmap(background)
+        # image_label.move(10, 0)
+
+        # text_label.raise_()
+
+        # print('start shifting...')
+        stack_shift_thread = Thread(target=self.ui.stackedWidget.setCurrentWidget, args=(tab,))
+        stack_shift_thread.start()
+        # print('done')
 
     def show_album(self, album):
         print(album)
+
+    def show_artist_thread(self, artist):
+        show_artist_thread = Thread(target=self.show_artist, args=(artist,))
+        show_artist_thread.start()
 
 
 if __name__ == "__main__":
     faulthandler.enable()
 
     app = QApplication([])
-    app.setStyle("plastique")
+    # app.setStyle("plastique")
     mw = MainWindow()
+    mw.setWindowFlag(Qt.FramelessWindowHint)
     mw.ui.show()
     app.exec_()
