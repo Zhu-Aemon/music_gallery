@@ -76,6 +76,8 @@ class MainWindow(QMainWindow):
 
         self.set_list_icon(exception=None)
 
+        self.set_icon(self.ui.all_music, r'resources-inverted/all_music.png', size=23)
+
         # 设置初始化歌曲名与信息值， 以及进度条进度
         self.ui.song_name.setText("")
         self.ui.song_info.setText("")
@@ -120,6 +122,8 @@ class MainWindow(QMainWindow):
         self.ui.tableWidget.setContextMenuPolicy(Qt.CustomContextMenu)
         self.ui.tableWidget.customContextMenuRequested.connect(self.show_table_menu)
         self.ui.change_mode.clicked.connect(self.change_mode_clicked)
+        self.ui.search_button.clicked.connect(self.search)
+        self.ui.restore.clicked.connect(self.restore_clicked)
 
     @staticmethod
     def config_init():
@@ -168,24 +172,23 @@ class MainWindow(QMainWindow):
         设置左侧列表选项卡的图标，默认设置的列表图标大小为23px
         """
 
-        icon_list = ['resources/all_music.png', 'resources/favourite_music.png', 'resources/statistic.png']
-        if exception is not None:
-            for i in range(self.ui.listWidget.count()):
-                if i != exception:
-                    img = QImage(icon_list[i])
-                    pixmap = QPixmap(img)
-                    fit_pixmap = pixmap.scaled(23, 23, Qt.IgnoreAspectRatio, Qt.SmoothTransformation)
-                    self.ui.listWidget.item(i).setIcon(fit_pixmap)
-                else:
-                    continue
-            self.ui.listWidget.setIconSize(QSize(23, 23))
+        if exception is None:
+            self.set_icon(self.ui.all_music, r'resources/all_music.png', size=23)
+            self.set_icon(self.ui.favourite_music, r'resources/favourite_music.png', size=23)
+            self.set_icon(self.ui.statistics, r'resources/statistic.png', size=23)
         else:
-            for i in range(self.ui.listWidget.count()):
-                img = QImage(icon_list[i])
-                pixmap = QPixmap(img)
-                fit_pixmap = pixmap.scaled(23, 23, Qt.IgnoreAspectRatio, Qt.SmoothTransformation)
-                self.ui.listWidget.item(i).setIcon(fit_pixmap)
-            self.ui.listWidget.setIconSize(QSize(23, 23))
+            if exception == 0:
+                # self.set_icon(self.ui.all_music, r'resources-inverted/all_music.png', size=23)
+                self.set_icon(self.ui.favourite_music, r'resources/favourite_music.png', size=23)
+                self.set_icon(self.ui.statistics, r'resources/statistic.png', size=23)
+            elif exception == 1:
+                self.set_icon(self.ui.all_music, r'resources/all_music.png', size=23)
+                # self.set_icon(self.ui.favourite_music, r'resources-inverted/favourite_music.png', size=23)
+                self.set_icon(self.ui.statistics, r'resources/statistic.png', size=23)
+            else:
+                self.set_icon(self.ui.all_music, r'resources/all_music.png', size=23)
+                self.set_icon(self.ui.favourite_music, r'resources/favourite_music.png', size=23)
+                # self.set_icon(self.ui.statistics, r'resources-inverted/statistic-inverted.png', size=23)
 
     def change_icon(self):
         """
@@ -193,19 +196,13 @@ class MainWindow(QMainWindow):
         :return: None
         """
 
-        icon_list = ['resources-inverted/all_music.png', 'resources-inverted/favourite_music.png',
-                     'resources-inverted/statistic-inverted.png']
         index = self.ui.listWidget.currentRow()
-        img = QImage(icon_list[index])
-        pixmap = QPixmap(img)
-        fit_pixmap = pixmap.scaled(23, 23, Qt.IgnoreAspectRatio, Qt.SmoothTransformation)
-        image = fit_pixmap.toImage()
-        image.tint(QColor(0, 0, 0))
-        fit_pixmap = QPixmap.fromImage(image)
-        # fit_pixmap.tint(QColor(0, 0, 0))
-        icon = QIcon(fit_pixmap)
-        self.ui.listWidget.item(index).setIcon(icon)
-        self.ui.listWidget.setIconSize(QSize(23, 23))
+        if index == 0:
+            self.set_icon(self.ui.all_music, r'resources-inverted/all_music.png', size=23)
+        elif index == 1:
+            self.set_icon(self.ui.favourite_music, r'resources-inverted/favourite_music.png', size=23)
+        else:
+            self.set_icon(self.ui.statistics, r'resources-inverted/statistic-inverted.png', size=23)
         self.set_list_icon(exception=index)
 
     def show_setting(self):
@@ -243,7 +240,7 @@ class MainWindow(QMainWindow):
             outline: 0px;
             padding-top: 110px;
             padding-right: 10px;
-            padding-left: 12px;
+            padding-left: 40px;
             border-bottom: 1px solid #eaeaea;
         }
         QListWidget::item
@@ -252,7 +249,7 @@ class MainWindow(QMainWindow):
             color: rgb(153, 153, 153);
             border: 0px;
             padding-left: 5px;
-            height: 45px;
+            height: 50px;
         }
         QListWidget::item:selected
         {
@@ -364,6 +361,93 @@ class MainWindow(QMainWindow):
         }
         """)
 
+        self.ui.all_music.setStyleSheet("""
+        QPushButton
+        {
+            margin: 0px;
+            border: 0px;
+            background-color: #ffffff;
+        }
+        """)
+
+        self.ui.all_music.setStyleSheet("""
+        QPushButton
+        {
+            margin: 0px;
+            border: 0px;
+            background-color: #ffffff;
+        }
+        """)
+
+        self.ui.favourite_music.setStyleSheet("""
+        QPushButton
+        {
+            margin: 0px;
+            border: 0px;
+            background-color: #ffffff;
+        }
+        """)
+
+        self.ui.statistics.setStyleSheet("""
+        QPushButton
+        {
+            margin: 0px;
+            border: 0px;
+            background-color: #ffffff;
+        }
+        """)
+
+        self.ui.listWidget_2.setStyleSheet("""
+        QListWidget
+        {
+            background-color: #ffffff;
+            border: none;
+            font: 10.5pt "Microsoft Yahei";
+            outline: 0px;
+            padding-right: 10px;
+            padding-left: 12px;
+        }
+        QListWidget::item
+        {
+            background-color: transparent;
+            color: rgb(153, 153, 153);
+            border: 0px;
+            padding-left: 5px;
+            height: 45px;
+        }
+        QListWidget::item:selected
+        {
+            color: #000000;
+            background: transparent;
+        }""")
+
+        self.ui.search_box.setStyleSheet("""
+        QLineEdit {
+            border: 2px solid #eaeaea;
+            outline: none;
+            background: #fff;
+            font: 14px 'Microsoft Yahei';
+            border-radius: 8px;
+        }""")
+
+        self.ui.search_button.setStyleSheet("""
+        QPushButton {
+            font: 13px 'Microsoft Yahei';
+            border-radius: 8px;
+            border: none;
+            background-color: rgb(79, 70, 186);
+            color: #ffffff;
+        }""")
+
+        self.ui.restore.setStyleSheet("""
+        QPushButton {
+            font: 13px 'Microsoft Yahei';
+            border-radius: 8px;
+            border: 1px solid #eaeaea;
+            background-color: #ffffff;
+            color: #000000;
+        }""")
+
     def set_graphics_effect(self):
         effect_tableWidget = QGraphicsDropShadowEffect(self.ui.tableWidget)
         effect_tableWidget.setBlurRadius(15)
@@ -393,6 +477,13 @@ class MainWindow(QMainWindow):
 
         self.ui.widget_3.setGraphicsEffect(effect_widget_3)
 
+        effect_widget_4 = QGraphicsDropShadowEffect(self.ui.widget_4)
+        effect_widget_4.setBlurRadius(15)
+        effect_widget_4.setColor('#eaeaea')
+        effect_widget_4.setOffset(0, 5)
+
+        self.ui.widget_4.setGraphicsEffect(effect_widget_4)
+
     def change_mode_clicked(self):
         if self.loop_state == 'loop':
             self.loop_state = 'shuffle'
@@ -407,6 +498,7 @@ class MainWindow(QMainWindow):
         :return: None
         """
 
+        self.ui.tableWidget.clearContents()
         source_settings = QSettings('config/source_config.ini', QSettings.IniFormat)
         path_list = source_settings.value('source_files')
         all_path_list = Core().source_scan(path_list)
@@ -430,7 +522,14 @@ class MainWindow(QMainWindow):
         """
 
         idx = self.ui.listWidget.currentRow()
-        self.ui.stackedWidget.setCurrentIndex(idx + 1)
+        if idx == 0:
+            self.ui.stackedWidget.setCurrentIndex(1)
+            self.display_all_songs()
+        elif idx == 1:
+            self.ui.stackedWidget.setCurrentIndex(1)
+            self.display_liked_songs()
+        elif idx == 2:
+            self.ui.stackedWidget.setCurrentIndex(2)
 
     def song_clicked(self):
         """
@@ -733,6 +832,47 @@ class MainWindow(QMainWindow):
     def show_artist_thread(self, artist):
         show_artist_thread = Thread(target=self.show_artist, args=(artist,))
         show_artist_thread.start()
+
+    def search(self):
+        search_info = self.ui.search_box.text()
+        match_items = self.ui.tableWidget.findItems(search_info, Qt.MatchContains)
+        row_count = self.ui.tableWidget.rowCount()
+
+        if not search_info:
+            return
+
+        if not match_items:
+            for i in range(row_count):
+                self.ui.tableWidget.setRowHidden(i, True)
+        else:
+            idx_list = [item.row() for item in match_items]
+            for i in range(row_count):
+                if i not in idx_list:
+                    self.ui.tableWidget.setRowHidden(i, True)
+
+    def restore_clicked(self):
+        row_count = self.ui.tableWidget.rowCount()
+
+        for i in range(row_count):
+            self.ui.tableWidget.setRowHidden(i, False)
+
+        self.ui.search_box.setText("")
+
+    def display_liked_songs(self):
+        self.ui.tableWidget.clearContents()
+        songs = QSettings('config/song.ini', QSettings.IniFormat)
+        all_like_list = songs.value('liked')
+        self.all_list = all_like_list
+
+        self.ui.tableWidget.setRowCount(len(all_like_list))
+        for index in range(len(all_like_list)):
+            path = all_like_list[index]
+            assert isinstance(path, str), 'path is not str!'
+            if path.endswith('mp3'):
+                title, artist, album = Core().get_mp3_info(path)
+                self.ui.tableWidget.setItem(index, 0, QTableWidgetItem(title))
+                self.ui.tableWidget.setItem(index, 1, QTableWidgetItem(artist))
+                self.ui.tableWidget.setItem(index, 2, QTableWidgetItem(album))
 
 
 if __name__ == "__main__":

@@ -152,6 +152,51 @@ class Core(object):
         urlretrieve(url, 'tmp/background.jpeg')
 
     @staticmethod
+    def get_artist_ins_name(artist):
+        assert isinstance(artist, str)
+        return artist.replace(' ', '').lower()
+        # # Parse the artist name to use in the URL
+        # chrome_options = Options()
+        # # chrome_options.add_argument('--headless')
+        # chrome_options.add_experimental_option('detach', True)
+        # chrome_options.add_experimental_option("excludeSwitches", ["enable-logging"])
+        # # initialize the Chrome driver
+        # driver = webdriver.Chrome(ChromeDriverManager().install(), options=chrome_options)
+        # driver.get('https://www.instagram.com/')
+        # WebDriverWait(driver, 10).until(
+        #     EC.presence_of_element_located((By.CLASS_NAME, '_aauy'))
+        # )
+        # driver.find_element(By.CLASS_NAME, '_aauy').send_keys(artist)
+        # ins_name_element = WebDriverWait(driver, 10).until(
+        #     EC.presence_of_element_located((By.XPATH, '/html/body/div[2]/div/div/div/div[1]/div/div/div/div[1]/section/nav/div[2]/div/div/div[2]/div[3]/div/div[2]/div/div[1]/div/a/div/div[2]/div[1]/div/div/div[1]'))
+        # )
+        #
+        # if ins_name_element:
+        #     ins_name = ins_name_element.text
+        #     return ins_name
+        # else:
+        #     print('fatal error!')
+
+    @staticmethod
+    def get_artist_ins_avatar(ins_name):
+        url = f'https://www.instagram.com/{ins_name}/'
+        # Parse the artist name to use in the URL
+        chrome_options = Options()
+        chrome_options.add_argument('--headless')
+        # chrome_options.add_experimental_option('detach', True)
+        chrome_options.add_experimental_option("excludeSwitches", ["enable-logging"])
+        # initialize the Chrome driver
+        driver = webdriver.Chrome(ChromeDriverManager().install(), options=chrome_options)
+        driver.get(url)
+
+        avatar_element = WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.XPATH, '/html/body/div[2]/div/div/div/div[1]/div/div/div/div[1]/section/main/div/header/div/div/span/img'))
+        )
+
+        avatar_src = avatar_element.get_attribute('src')
+        return avatar_src
+
+    @staticmethod
     def circle_corner(src, percentage, filename):
         image = Image.open(src)
         length = image.size[0]
@@ -178,6 +223,34 @@ class Core(object):
         # draw = ImageDraw.Draw(img)
         # draw.rounded_rectangle(img.getbbox(), outline="black", width=3, radius=radii)
         image.save(filename, 'png', quality=100)
+
+    @staticmethod
+    # 圆形头像
+    def circle(img_path, cir_path):
+        ima = Image.open(img_path).convert("RGBA")
+        size = ima.size
+        # print(size)
+        # 因为是要圆形，所以需要正方形的图片
+        r2 = min(size[0], size[1])
+        if size[0] != size[1]:
+            ima = ima.resize((r2, r2), Image.ANTIALIAS)
+        # 最后生成圆的半径
+        r3 = int(r2 / 2)
+        imb = Image.new('RGBA', (r3 * 2, r3 * 2), (255, 255, 255, 0))
+        pima = ima.load()  # 像素的访问对象
+        pimb = imb.load()
+        r = float(r2 / 2)  # 圆心横坐标
+
+        for i in range(r2):
+            for j in range(r2):
+                lx = abs(i - r)  # 到圆心距离的横坐标
+                ly = abs(j - r)  # 到圆心距离的纵坐标
+                l = (pow(lx, 2) + pow(ly, 2)) ** 0.5  # 三角函数 半径
+                if l < r3:
+                    pimb[i - (r - r3), j - (r - r3)] = pima[i, j]
+
+        imb.save(cir_path)
+        return cir_path
 
 
 def _async_raise(tid, ex_ctype):

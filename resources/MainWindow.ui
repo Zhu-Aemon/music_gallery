@@ -56,7 +56,7 @@
       <property name="geometry">
        <rect>
         <x>30</x>
-        <y>110</y>
+        <y>105</y>
         <width>111</width>
         <height>31</height>
        </rect>
@@ -157,7 +157,7 @@
       <property name="geometry">
        <rect>
         <x>150</x>
-        <y>115</y>
+        <y>110</y>
         <width>23</width>
         <height>23</height>
        </rect>
@@ -174,6 +174,64 @@
       <property name="text">
        <string/>
       </property>
+     </widget>
+     <widget class="QWidget" name="widget_4" native="true">
+      <property name="geometry">
+       <rect>
+        <x>30</x>
+        <y>150</y>
+        <width>410</width>
+        <height>61</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QWidget {
+            background-color: #ffffff;
+            border-radius: 15px;
+        }</string>
+      </property>
+      <widget class="QLineEdit" name="search_box">
+       <property name="geometry">
+        <rect>
+         <x>30</x>
+         <y>15</y>
+         <width>190</width>
+         <height>30</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="search_button">
+       <property name="geometry">
+        <rect>
+         <x>240</x>
+         <y>15</y>
+         <width>60</width>
+         <height>30</height>
+        </rect>
+       </property>
+       <property name="cursor">
+        <cursorShape>PointingHandCursor</cursorShape>
+       </property>
+       <property name="text">
+        <string>查询</string>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="restore">
+       <property name="geometry">
+        <rect>
+         <x>320</x>
+         <y>15</y>
+         <width>60</width>
+         <height>30</height>
+        </rect>
+       </property>
+       <property name="cursor">
+        <cursorShape>PointingHandCursor</cursorShape>
+       </property>
+       <property name="text">
+        <string>还原</string>
+       </property>
+      </widget>
      </widget>
     </widget>
     <widget class="QWidget" name="page_2"/>
@@ -214,7 +272,7 @@
             outline: 0px;
             padding-top: 110px;
             padding-right: 10px;
-            padding-left: 12px;
+            padding-left: 40px;
         }
         QListWidget::item
         {
@@ -706,6 +764,72 @@ QProgressBar::chunk {
      <string/>
     </property>
    </widget>
+   <widget class="QPushButton" name="all_music">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>122</y>
+      <width>23</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="cursor">
+     <cursorShape>PointingHandCursor</cursorShape>
+    </property>
+    <property name="mouseTracking">
+     <bool>true</bool>
+    </property>
+    <property name="styleSheet">
+     <string notr="true"/>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="favourite_music">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>172</y>
+      <width>23</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="cursor">
+     <cursorShape>PointingHandCursor</cursorShape>
+    </property>
+    <property name="mouseTracking">
+     <bool>true</bool>
+    </property>
+    <property name="styleSheet">
+     <string notr="true"/>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="statistics">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>222</y>
+      <width>23</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="cursor">
+     <cursorShape>PointingHandCursor</cursorShape>
+    </property>
+    <property name="mouseTracking">
+     <bool>true</bool>
+    </property>
+    <property name="styleSheet">
+     <string notr="true"/>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
    <zorder>stackedWidget</zorder>
    <zorder>listWidget</zorder>
    <zorder>widget</zorder>
@@ -720,6 +844,9 @@ QProgressBar::chunk {
    <zorder>add</zorder>
    <zorder>album_divider</zorder>
    <zorder>show_album</zorder>
+   <zorder>all_music</zorder>
+   <zorder>favourite_music</zorder>
+   <zorder>statistics</zorder>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="actionAbout">
