@@ -2,6 +2,7 @@ import getpass
 import math
 import os
 import time
+import random
 import faulthandler
 
 from PySide2.QtWidgets import QApplication, QMainWindow, QTableWidgetItem, QAbstractItemView, QMenu, QAction, QWidget, \
@@ -44,7 +45,7 @@ class MainWindow(QMainWindow):
         self.setting_window = Setting()
         self.signal_process()
         self.set_style_sheet()
-        # self.set_graphics_effect()
+        self.set_graphics_effect()
 
     def window_init(self):
         """
@@ -67,12 +68,19 @@ class MainWindow(QMainWindow):
         self.set_icon(self.ui.play_music, r'resources-inverted/play_icon_gray.png', size=32)
         self.set_icon(self.ui.last_song, r'resources-inverted/last_song_gray.png', size=32)
         self.set_icon(self.ui.next_song, r'resources-inverted/next_song_gray.png', size=32)
+        self.set_icon(self.ui.show_album, r'resources/show.png', size=23)
+
+        self.set_icon(self.ui.add_to_album, r'resources-inverted/add_to_album.png', size=32)
+        self.set_icon(self.ui.change_mode, r'resources-inverted/loop.png', size=32)
+        self.set_icon(self.ui.history_info, r'resources-inverted/history.png', size=32)
+
         self.set_list_icon(exception=None)
 
         # 设置初始化歌曲名与信息值， 以及进度条进度
         self.ui.song_name.setText("")
         self.ui.song_info.setText("")
         self.ui.progressBar.setValue(0)
+        self.ui.album_divider.setText('Albums')
 
         # 加载所有音乐中的有关内容，并且调整表格列宽
         self.display_all_songs()
@@ -88,7 +96,7 @@ class MainWindow(QMainWindow):
         username = avatar_setting.value('username')
         if avatar_source:
             Core.circle_corner(avatar_source, 0.2, r'tmp/avatar.png')
-            self.set_icon(self.ui.avatar, avatar_source, size=50)
+            self.set_icon(self.ui.avatar, avatar_source, size=40)
         if username:
             self.ui.username.setText(username)
         else:
@@ -111,6 +119,7 @@ class MainWindow(QMainWindow):
 
         self.ui.tableWidget.setContextMenuPolicy(Qt.CustomContextMenu)
         self.ui.tableWidget.customContextMenuRequested.connect(self.show_table_menu)
+        self.ui.change_mode.clicked.connect(self.change_mode_clicked)
 
     @staticmethod
     def config_init():
@@ -225,15 +234,6 @@ class MainWindow(QMainWindow):
             self.ui.tableWidget.item(i, 2).setForeground(QBrush(QColor('#707070')))
 
     def set_style_sheet(self):
-        """
-        rgb(179, 179, 179)
-        rgb(0, 0, 0)
-        rgb(255, 255, 255)
-        rgb(16, 16, 16)
-        rgb(21, 21, 21)
-        rgb(24, 24, 24)
-        :return:
-        """
         self.ui.listWidget.setStyleSheet("""
         QListWidget
         {
@@ -244,6 +244,7 @@ class MainWindow(QMainWindow):
             padding-top: 110px;
             padding-right: 10px;
             padding-left: 12px;
+            border-bottom: 1px solid #eaeaea;
         }
         QListWidget::item
         {
@@ -290,7 +291,7 @@ class MainWindow(QMainWindow):
         QTableWidget {
             background-color: #ffffff;
             border: none;
-            border-radius: 5px;
+            border-radius: 15px;
             outline: none;
         }
         QHeaderView::section{
@@ -330,17 +331,75 @@ class MainWindow(QMainWindow):
 
         self.ui.username.setStyleSheet("""
         QLabel {
-            font: 16px 'Micorosoft Yahei';
+            font: 15px 'Micorosoft Yahei';
             color: rgb(109, 109, 109);
         }""")
 
+        self.ui.progressBar.setStyleSheet("""
+        QProgressBar {
+            border: none;
+            border-radius: 2px;
+            background-color: #f9f9f9;
+            qproperty-textVisible: false;
+        }
+
+        QProgressBar::chunk {
+            background-color: #808080;
+            border-radius: 2px;
+        }
+        """)
+
+        self.ui.album_divider.setStyleSheet("""
+        QLabel {
+            font: 15px 'Microsoft Yahei UI Semibold';
+            color: #000000;
+        }""")
+
+        self.ui.show_album.setStyleSheet("""
+        QPushButton
+        {
+            margin: 0px;
+            border: 0px;
+            background-color: #ffffff;
+        }
+        """)
+
     def set_graphics_effect(self):
         effect_tableWidget = QGraphicsDropShadowEffect(self.ui.tableWidget)
-        effect_tableWidget.setBlurRadius(3)
-        effect_tableWidget.setColor(Qt.gray)
-        effect_tableWidget.setOffset(0, 1)
+        effect_tableWidget.setBlurRadius(15)
+        effect_tableWidget.setColor('#eaeaea')
+        effect_tableWidget.setOffset(0, 5)
 
         self.ui.tableWidget.setGraphicsEffect(effect_tableWidget)
+
+        effect_widget = QGraphicsDropShadowEffect(self.ui.widget)
+        effect_widget.setBlurRadius(15)
+        effect_widget.setColor('#eaeaea')
+        effect_widget.setOffset(0, 5)
+
+        self.ui.widget.setGraphicsEffect(effect_widget)
+
+        effect_widget_2 = QGraphicsDropShadowEffect(self.ui.widget_2)
+        effect_widget_2.setBlurRadius(15)
+        effect_widget_2.setColor('#eaeaea')
+        effect_widget_2.setOffset(0, 5)
+
+        self.ui.widget_2.setGraphicsEffect(effect_widget_2)
+
+        effect_widget_3 = QGraphicsDropShadowEffect(self.ui.widget_3)
+        effect_widget_3.setBlurRadius(15)
+        effect_widget_3.setColor('#eaeaea')
+        effect_widget_3.setOffset(0, 5)
+
+        self.ui.widget_3.setGraphicsEffect(effect_widget_3)
+
+    def change_mode_clicked(self):
+        if self.loop_state == 'loop':
+            self.loop_state = 'shuffle'
+            self.set_icon(self.ui.change_mode, r'resources-inverted/shuffle.png', size=32)
+        else:
+            self.loop_state = 'loop'
+            self.set_icon(self.ui.change_mode, r'resources-inverted/loop.png', size=32)
 
     def display_all_songs(self):
         """
@@ -462,19 +521,22 @@ class MainWindow(QMainWindow):
             if not os.path.exists(f"C:/Users/{self.username}/AppData/Roaming/Gallery/cover"):
                 os.makedirs(f"C:/Users/{self.username}/AppData/Roaming/Gallery/cover")
             files = []
-        song_info_str = f"{title} - {album}.jpg"
+        song_info_str = f"{title}-{album}.jpg"
         if r'/' in song_info_str:
             song_info = song_info_str.replace(r'/', '&')
+            song_info = song_info.replace(' ', '_')
             if song_info not in files:
                 Core.save_cover(song_path, f"C:/Users/{self.username}/AppData/Roaming/Gallery/cover/{song_info}")
-                self.set_icon(self.ui.song_cover,
-                              f"C:/Users/{self.username}/AppData/Roaming/Gallery/cover/{song_info}", size=47)
+                Core.circle_corner(f"C:/Users/{self.username}/AppData/Roaming/Gallery/cover/{song_info}", 0.25, r'tmp/cover.png')
+                self.set_icon(self.ui.song_cover, r"tmp/cover.png", size=47)
         else:
             if f"{title}-{album}.jpg" not in files:
+                song_info = f"{title}-{album}.jpg"
+                song_info = song_info.replace(' ', '_')
                 Core.save_cover(song_path,
-                                f"C:/Users/{self.username}/AppData/Roaming/Gallery/cover/{title}-{album}.jpg")
-            self.set_icon(self.ui.song_cover,
-                          f"C:/Users/{self.username}/AppData/Roaming/Gallery/cover/{title}-{album}.jpg", size=47)
+                                f"C:/Users/{self.username}/AppData/Roaming/Gallery/cover/{song_info}")
+                Core.circle_corner(f"C:/Users/{self.username}/AppData/Roaming/Gallery/cover/{song_info}", 0.25, r'tmp/cover.png')
+            self.set_icon(self.ui.song_cover, r'tmp/cover.png', size=47)
 
     def get_current_song_info(self):
         """
@@ -513,8 +575,12 @@ class MainWindow(QMainWindow):
     def play_next_song(self):
         if self.state != 'stopped':
             self.pause_play()
-        if self.index != self.ui.tableWidget.rowCount() - 1:
+        if self.index != self.ui.tableWidget.rowCount() - 1 and self.loop_state == 'loop':
             self.ui.tableWidget.selectRow(self.index + 1)
+            self.play_song()
+        elif self.loop_state == 'shuffle':
+            idx = random.randint(0, self.ui.tableWidget.rowCount() - 1)
+            self.ui.tableWidget.selectRow(idx)
             self.play_song()
         else:
             self.index = -1
