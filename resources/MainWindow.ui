@@ -48,7 +48,7 @@
 }</string>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>1</number>
     </property>
     <widget class="QWidget" name="page_3"/>
     <widget class="QWidget" name="page">
@@ -56,7 +56,7 @@
       <property name="geometry">
        <rect>
         <x>30</x>
-        <y>60</y>
+        <y>110</y>
         <width>111</width>
         <height>31</height>
        </rect>
@@ -77,9 +77,9 @@
       <property name="geometry">
        <rect>
         <x>30</x>
-        <y>115</y>
+        <y>159</y>
         <width>1160</width>
-        <height>725</height>
+        <height>681</height>
        </rect>
       </property>
       <property name="minimumSize">
@@ -104,7 +104,23 @@
        <enum>Qt::NoFocus</enum>
       </property>
       <property name="styleSheet">
-       <string notr="true"/>
+       <string notr="true">QTableWidget {
+            background-color: #ffffff;
+            border: none;
+            outline: none;
+            border-radius: 15px;
+            padding: 10px;
+        }
+        QHeaderView::section{
+            text-align:center;
+            padding:3px;
+            margin:0px;
+            border-left-width:0;
+        }
+        QTableWidget::item:selected{
+            outline: none;
+            background-color: #dbe7f4;
+        }</string>
       </property>
       <property name="showGrid">
        <bool>false</bool>
@@ -159,7 +175,29 @@
      <bool>true</bool>
     </property>
     <property name="styleSheet">
-     <string notr="true"/>
+     <string notr="true">QListWidget
+        {
+            background-color: #ffffff;
+            border: none;
+            font: 10.5pt &quot;Microsoft Yahei&quot;;
+            outline: 0px;
+            padding-top: 110px;
+            padding-right: 10px;
+            padding-left: 12px;
+        }
+        QListWidget::item
+        {
+            background-color: transparent;
+            color: rgb(153, 153, 153);
+            border: 0px;
+            padding-left: 5px;
+            height: 45px;
+        }
+        QListWidget::item:selected
+        {
+            color: #000000;
+            background: transparent;
+        }</string>
     </property>
     <item>
      <property name="text">
@@ -180,8 +218,8 @@
    <widget class="QPushButton" name="settings">
     <property name="geometry">
      <rect>
-      <x>20</x>
-      <y>20</y>
+      <x>170</x>
+      <y>30</y>
       <width>23</width>
       <height>23</height>
      </rect>
@@ -202,8 +240,8 @@
    <widget class="QPushButton" name="add">
     <property name="geometry">
      <rect>
-      <x>171</x>
-      <y>20</y>
+      <x>170</x>
+      <y>260</y>
       <width>23</width>
       <height>23</height>
      </rect>
@@ -219,27 +257,6 @@
     </property>
     <property name="text">
      <string/>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label">
-    <property name="geometry">
-     <rect>
-      <x>20</x>
-      <y>47</y>
-      <width>121</width>
-      <height>51</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <family>Microsoft YaHei UI Semibold</family>
-      <pointsize>24</pointsize>
-      <weight>75</weight>
-      <bold>true</bold>
-     </font>
-    </property>
-    <property name="text">
-     <string>Gallery</string>
     </property>
    </widget>
    <widget class="QProgressBar" name="progressBar">
@@ -479,16 +496,43 @@ QProgressBar::chunk {
      </property>
     </widget>
    </widget>
+   <widget class="QPushButton" name="avatar">
+    <property name="geometry">
+     <rect>
+      <x>25</x>
+      <y>30</y>
+      <width>50</width>
+      <height>50</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="username">
+    <property name="geometry">
+     <rect>
+      <x>85</x>
+      <y>40</y>
+      <width>70</width>
+      <height>30</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>TextLabel</string>
+    </property>
+   </widget>
    <zorder>stackedWidget</zorder>
    <zorder>listWidget</zorder>
    <zorder>settings</zorder>
    <zorder>add</zorder>
-   <zorder>label</zorder>
    <zorder>widget</zorder>
    <zorder>song_name</zorder>
    <zorder>song_info</zorder>
    <zorder>progressBar</zorder>
    <zorder>widget_2</zorder>
+   <zorder>avatar</zorder>
+   <zorder>username</zorder>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="actionAbout">

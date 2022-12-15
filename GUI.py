@@ -7,8 +7,8 @@ import faulthandler
 from PySide2.QtWidgets import QApplication, QMainWindow, QTableWidgetItem, QAbstractItemView, QMenu, QAction, QWidget, \
     QLabel, QPushButton, QGraphicsDropShadowEffect
 from PySide2.QtUiTools import QUiLoader
-from PySide2.QtGui import QPalette, QImage, QPixmap, QBrush, QColor, QFont, QIcon, QCursor
-from PySide2.QtCore import Qt, QSize, QSettings
+from PySide2.QtGui import QPalette, QImage, QPixmap, QBrush, QColor, QFont, QIcon, QCursor, QPen
+from PySide2.QtCore import Qt, QSize, QSettings, QLine
 
 from Setting import Setting
 from Gallery import Core, stop_thread
@@ -78,6 +78,22 @@ class MainWindow(QMainWindow):
         self.display_all_songs()
         self.table_setting()
 
+        # 设置初始行
+        self.ui.listWidget.setCurrentRow(0)
+        self.ui.stackedWidget.setCurrentWidget(self.ui.page)
+
+        # 设置avatar
+        avatar_setting = QSettings('config/source_config.ini', QSettings.IniFormat)
+        avatar_source = avatar_setting.value('avatar')
+        username = avatar_setting.value('username')
+        if avatar_source:
+            Core.circle_corner(avatar_source, 0.2, r'tmp/avatar.png')
+            self.set_icon(self.ui.avatar, avatar_source, size=50)
+        if username:
+            self.ui.username.setText(username)
+        else:
+            self.ui.username.setText('set username')
+
     def signal_process(self):
         """
         处理接收到的各种信号
@@ -86,7 +102,6 @@ class MainWindow(QMainWindow):
 
         self.ui.listWidget.itemSelectionChanged.connect(self.change_icon)
         self.ui.settings.clicked.connect(self.show_setting)
-        self.ui.listWidget.itemSelectionChanged.connect(self.shift_stack)
         self.ui.listWidget.itemSelectionChanged.connect(self.shift_stack)
         self.ui.tableWidget.itemDoubleClicked.connect(self.play_song_thread)
         self.ui.play_music.clicked.connect(self.play_button_clicked)
@@ -174,9 +189,13 @@ class MainWindow(QMainWindow):
         index = self.ui.listWidget.currentRow()
         img = QImage(icon_list[index])
         pixmap = QPixmap(img)
-        fit_pixmap = pixmap.scaled(23, 23, Qt.IgnoreAspectRatio,
-                                   Qt.SmoothTransformation)
-        self.ui.listWidget.item(index).setIcon(fit_pixmap)
+        fit_pixmap = pixmap.scaled(23, 23, Qt.IgnoreAspectRatio, Qt.SmoothTransformation)
+        image = fit_pixmap.toImage()
+        image.tint(QColor(0, 0, 0))
+        fit_pixmap = QPixmap.fromImage(image)
+        # fit_pixmap.tint(QColor(0, 0, 0))
+        icon = QIcon(fit_pixmap)
+        self.ui.listWidget.item(index).setIcon(icon)
         self.ui.listWidget.setIconSize(QSize(23, 23))
         self.set_list_icon(exception=index)
 
@@ -216,30 +235,28 @@ class MainWindow(QMainWindow):
         :return:
         """
         self.ui.listWidget.setStyleSheet("""
-        QListWidget 
+        QListWidget
         {
             background-color: #ffffff;
             border: none;
-            border-radius: 15px;
             font: 10.5pt "Microsoft Yahei";
             outline: 0px;
-            padding-top: 100px;
+            padding-top: 110px;
             padding-right: 10px;
             padding-left: 12px;
         }
-        QListWidget::item 
+        QListWidget::item
         {
             background-color: transparent;
-            color: #000000;
+            color: rgb(153, 153, 153);
             border: 0px;
             padding-left: 5px;
-            height: 38px;
+            height: 45px;
         }
-        QListWidget::item:selected 
+        QListWidget::item:selected
         {
-            color: #ffffff;
-            background-color: rgb(46, 123, 253);
-            border-radius: 12px;
+            color: #000000;
+            background: transparent;
         }""")
 
         self.ui.settings.setStyleSheet("""
@@ -259,6 +276,12 @@ class MainWindow(QMainWindow):
             background-color: #ffffff;
         }
         """)
+
+        self.ui.avatar.setStyleSheet("""
+        QPushButton
+        {
+            border-radius: 8px;
+        }""")
 
         # self.ui.label.setStyleSheet("color: rgb(255, 255, 255)")
         # self.ui.label_2.setStyleSheet("color: rgb(255, 255, 255)")
@@ -292,6 +315,17 @@ class MainWindow(QMainWindow):
         QWidget {
             background-color: #ffffff;
             border-radius: 15px;
+        }""")
+
+        # self.ui.line.setStyleSheet("""
+        # Line {
+        #     color: rgb(153, 153, 153);
+        # }""")
+
+        self.ui.username.setStyleSheet("""
+        QLabel {
+            font: 16px 'Micorosoft Yahei';
+            color: rgb(109, 109, 109);
         }""")
 
     def set_graphics_effect(self):

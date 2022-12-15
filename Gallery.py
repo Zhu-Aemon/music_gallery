@@ -14,6 +14,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 
 from urllib.request import urlretrieve
+from PIL import Image, ImageDraw
 
 
 class Core(object):
@@ -149,6 +150,34 @@ class Core(object):
     @staticmethod
     def image_down(url):
         urlretrieve(url, 'tmp/background.jpeg')
+
+    @staticmethod
+    def circle_corner(src, percentage, filename):
+        image = Image.open(src)
+        length = image.size[0]
+        radii = int(length * percentage)
+        circle = Image.new('L', (radii * 2, radii * 2), 0)  # 创建黑色方形
+        draw = ImageDraw.Draw(circle)
+        draw.ellipse((0, 0, radii * 2, radii * 2), fill=255)  # 黑色方形内切白色圆形
+
+        image = image.convert("RGBA")
+        w, h = image.size
+
+        # 创建一个alpha层，存放四个圆角，使用透明度切除圆角外的图片
+        alpha = Image.new('L', image.size, 255)
+        alpha.paste(circle.crop((0, 0, radii, radii)), (0, 0))  # 左上角
+        alpha.paste(circle.crop((radii, 0, radii * 2, radii)),
+                    (w - radii, 0))  # 右上角
+        alpha.paste(circle.crop((radii, radii, radii * 2, radii * 2)),
+                    (w - radii, h - radii))  # 右下角
+        alpha.paste(circle.crop((0, radii, radii, radii * 2)),
+                    (0, h - radii))  # 左下角
+        image.putalpha(alpha)  # 白色区域透明可见，黑色区域不可见
+
+        # 添加圆角边框
+        # draw = ImageDraw.Draw(img)
+        # draw.rounded_rectangle(img.getbbox(), outline="black", width=3, radius=radii)
+        image.save(filename, 'png', quality=100)
 
 
 def _async_raise(tid, ex_ctype):
